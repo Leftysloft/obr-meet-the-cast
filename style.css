@@ -1,0 +1,220 @@
+:root {
+  display: flex;
+  justify-content: left;
+  flex-direction: row-reverse;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1;
+  font-weight: 100;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #000000;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+#sheet-list {
+  width: auto;
+}
+
+.content-container {
+  display: flex;
+  width: 150px;
+  height: 85px;
+  text-align: start;
+}
+
+.content-container {
+  display: flex;
+  width: 150px;
+  height: 78px;
+  text-align: start;
+}
+
+.character-portrait-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: end;
+  width: 100%;
+  margin-bottom: -6px;
+  margin-right: 0px;
+  width: 117px;
+  height: 75px;
+}
+
+.embed-view {
+  width: min-content;
+  height: 75px;
+  border: none; /* Removes iframe border */
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 5px; /* Space between icons */
+  margin-left: auto;
+  max-width: min-content;
+  align-items: center;
+  height: 60px;
+}
+
+.icon-container img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+}
+
+.icon-container img:hover {
+  transform: scale(1.1); /* Slightly enlarge icon on hover */
+}
+
+li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+  padding-bottom: 0px;
+  border-bottom: 1px solid blue; /* Optional: Adds separator */
+}
+
+a {
+  display: flex;
+  justify-content: left;
+  font-weight: 100;
+  color: #ffffff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #ffffff;
+}
+
+body {
+  overflow: auto;
+  position: absolute;
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: normal;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align list to the right */
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-weight: normal;
+  border: solid;
+  border-width: thin;
+  border-color: blue;
+  padding: 4px;
+  margin-top: 3px;
+  margin-right: 0px;
+  font-size: large;
+  list-style: none;
+}
+
+h1 {
+  font-size: 3em;
+  line-height: 1.1;
+}
+
+h3 {
+  margin: 1px;
+}
+
+#app {
+  display: flex;
+  max-width: 65px;
+  justify-content: left;
+  padding-top: 1px;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #ffffffaa);
+}
+
+.logo.vanilla:hover {
+  filter: drop-shadow(0 0 2em #ffffffaa);
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #ffffff;
+}
+
+.character {
+  display: flex;
+}
+
+button {
+  position: relative;
+  text-wrap: nowrap;
+  border-radius: 20px;
+  border: 1px solid #d91f1f;
+  padding: 0.1em 0.8em;
+  color: #000000;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #ffffff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.name-container {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    display: flex;
+    justify-content: left;
+    color: #ffffff;
+    background-color: #000000;
+  }
+
+  a:hover {
+    color: #ffffff;
+  }
+
+  button {
+    position: relative;
+    background-color: #f9f9f9;
+  }
+}
