@@ -99,7 +99,7 @@ export async function setupSheetList(element) {
           // portrait.classList.add("embed-view");
           portrait.setAttribute(
             "src",
-            "http://127.0.0.1:5000/character_server?id=" + urlItem.character_id
+            "http://lefty469/pythonanywhere.com/character_server?id=" + urlItem.character_id
           );
           portraitContainer.appendChild(portrait);
 
