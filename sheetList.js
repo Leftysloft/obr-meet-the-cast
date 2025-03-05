@@ -95,7 +95,7 @@ export async function setupSheetList(element) {
           portraitContainer.classList.add("character-portrait-container");
 
           const portrait = document.createElement("embed");
-          portrait.classList.add("embed-view");
+          // portrait.classList.add("embed-view");
           portrait.setAttribute("width", 160);
           portrait.setAttribute("height", 75);
           portrait.setAttribute(
