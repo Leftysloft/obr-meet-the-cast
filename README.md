@@ -18,23 +18,14 @@ NOTICE: (22Mar2024) This is best done using the **_OBR Prefab extension_**, as i
 4. Clicking on the extension icon will open the view, and the image from the characget sheet will be displayed with some icons.
    ![3](/screenshots/dm-view.png)
 
-5. The DM screen includes a checkbox to enable players to view and interact with the extension.
-   ![4](/screenshots/enable-player-view.png)
+5. The healthbar under the image, and the stats to the right will update dynamically when affected on DnDBeyond.
+   ![4]
 
-6. The healthbar directly under the character image will move dynamically when health is affected on DnDBeyond.
-   ![5]
+6. These are the current features from the extension.
+   ![5](/screenshots/features.png)
 
 https://github.com/Leftysloft/obr-ext-healthbars/assets/5694639/919fa4b0-5441-4150-9fff-6b335cfe7f11
 
-7. To add/edit you notebook url, click on the pen-n-square icon.
-   ![6](screenshots/edit-notebook-page.png)
-
-8. View the notebook by clicking the circle-rightArrow-icon.
-   ![7](/screenshots/view-notebook.png)
-
-9. Clicking on the character image will open a window to the DnDBeyond character page. The character owner and the DM can interact as normal.
-   ![8](/screenshots/view-dndb-character.png)
-
-10. You can drag the app around the map window.
+7. You can drag the app around the map window.
 
 https://github.com/Leftysloft/obr-ext-healthbars/assets/5694639/d9c20dda-cd11-48d7-916b-d77e278bbc47
