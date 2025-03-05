@@ -1,11 +1,11 @@
 {
   "icon": "/sample.png",
   "name": "Meet The Cast",
-  "version": "1.1.0",
+  "version": "2.0.0.b",
   "manifest_version": 2,
   "author": "Tiberius",
   "description": "Popup that shows live data, including Class, HP, AC, and image from a DNDB character sheet.",
-  "homepage_url": "https://github.com/Leftysloft/obr-ext-healthbars/blob/main/README.md",
+  "homepage_url": "https://github.com/Leftysloft/obr-meet-the-cast/blob/main/README.md",
   "action": {
     "title": "Meet The Cast",
     "icon": "/heart.svg",
