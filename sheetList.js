@@ -65,7 +65,7 @@ export async function setupSheetList(element) {
         const embed = node.querySelector(".embed-view");
         if (embed) {
           embed.src =
-            "http://lefty469.pythonanywere.com:5000/character_server?id=" + urlItem.character_id;
+            "https://lefty469.pythonanywere.com:5000/character_server?id=" + urlItem.character_id;
         }
 
         const sheetLink = node.querySelector(".sheet-url");
@@ -99,7 +99,7 @@ export async function setupSheetList(element) {
           // portrait.classList.add("embed-view");
           portrait.setAttribute(
             "src",
-            "http://lefty469/pythonanywhere.com:5000/character_server?id=" + urlItem.character_id
+            "https://lefty469/pythonanywhere.com:5000/character_server?id=" + urlItem.character_id
           );
           portraitContainer.appendChild(portrait);
 
