@@ -65,7 +65,8 @@ export async function setupSheetList(element) {
         const embed = node.querySelector(".embed-view");
         if (embed) {
           embed.src =
-            "http://127.0.0.1:5000/character_server?id=" + urlItem.character_id;
+            "http://lefty469.pythonanywhere.com/character_server?id=" +
+            urlItem.character_id;
         }
 
         const sheetLink = node.querySelector(".sheet-url");
