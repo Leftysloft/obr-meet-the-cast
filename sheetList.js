@@ -100,7 +100,7 @@ export async function setupSheetList(element) {
           portrait.setAttribute("height", 75);
           portrait.setAttribute(
             "src",
-            "https://lefty469/pythonanywhere.com/character_server?id=" +
+            "https://lefty469.pythonanywhere.com/character_server?id=" +
               urlItem.character_id
           );
           portraitContainer.appendChild(portrait);
