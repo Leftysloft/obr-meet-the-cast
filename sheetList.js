@@ -95,12 +95,13 @@ export async function setupSheetList(element) {
           portraitContainer.classList.add("character-portrait-container");
 
           const portrait = document.createElement("embed");
+          portrait.classList.add("embed-view");
           portrait.setAttribute("width", 160);
           portrait.setAttribute("height", 75);
-          // portrait.classList.add("embed-view");
           portrait.setAttribute(
             "src",
-            "http://127.0.0.1:5000/character_server?id=" + urlItem.character_id
+            "https://lefty469/pythonanywhere.com/character_server?id=" +
+              urlItem.character_id
           );
           portraitContainer.appendChild(portrait);
 
