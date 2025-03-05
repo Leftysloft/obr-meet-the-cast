@@ -170,3 +170,44 @@ export async function setupSheetList(element) {
   };
   OBR.scene.items.onChange(renderList);
 }
+
+// Set link (circle right) visible to players
+export async function visibileFunction(uuid) {
+  const vis = document.getElementById(uuid).checked;
+  OBR.scene.items.updateItems(
+    await OBR.scene.items.getItems([uuid]),
+    (items) => {
+      for (let item of items) {
+        let meta = item.metadata[`${ID}/metadata`];
+        meta.visible = vis;
+        item.metadata[`${ID}/metadata`] = meta;
+      }
+    }
+  );
+}
+
+//opens character's notebook
+export function sheetFunction(url) {
+  if (url != "") {
+    const windowFeatures = "left=100,top=100,width=600,height=800";
+    window.open(`${url}`, "mozillaWindow", windowFeatures);
+  } else {
+    window.confirm(
+      "YOU MUST FIRST SET THE URL!!!\nPlease click on the notepad icon to set your page URL"
+    );
+  }
+}
+
+// Edit sheet url
+export async function editSheetFunction(uuid, url) {
+  OBR.scene.items.updateItems(
+    await OBR.scene.items.getItems([uuid]),
+    (items) => {
+      for (let item of items) {
+        let meta = item.metadata[`${ID}/metadata`];
+        meta.url = url;
+        item.metadata[`${ID}/metadata`] = meta;
+      }
+    }
+  );
+}
