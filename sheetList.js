@@ -97,7 +97,6 @@ export async function setupSheetList(element) {
           portrait.classList.add("embed-view");
           portrait.setAttribute("width", 160);
           portrait.setAttribute("height", 75);
-          // portrait.classList.add("embed-view");
           portrait.setAttribute(
             "src",
             "https://lefty469/pythonanywhere.com/character_server?id=" + urlItem.character_id
