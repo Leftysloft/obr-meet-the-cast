@@ -1,4 +1,4 @@
-# obr-ext-healthbars
+# obr-meet-the-cast
 
 Extension for Owlbear Rodeo 2 to add a character interaction sheet.
 To use this app extension, the character sheet on DnDBeyond **_MUST_** be set to **_public_**.
