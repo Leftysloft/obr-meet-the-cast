@@ -23,5 +23,5 @@ OBR.onReady(() => {
   setupContextMenu();
 
   setupSheetList(document.querySelector("#sheet-list"));
-  OBR.action.open();
+  // OBR.action.open();
 });
