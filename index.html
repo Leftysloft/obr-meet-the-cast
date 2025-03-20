@@ -8,15 +8,34 @@
   </head>
   <body>
     <div><h3>The Cast</h3></div>
+
     <div id="app">
       <!-- Character Section will be dynamically populated here -->
       <ul id="character-list"></ul>
     </div>
 
+    <!-- Settings Icon Button -->
     <div class="button">
+      <button id="settingsButton" type="button">
+        <img
+          src="/gears.png"
+          alt="Settings"
+          style="width: 24px; height: 24px"
+        />
+      </button>
       <button id="usageButton" type="button">Usage Guide</button>
     </div>
 
-    <script async="false" type="module" src="/main.js"></script>
+    <!-- Settings Overlay (hidden initially) -->
+    <div id="settings-overlay" class="overlay hidden">
+      <div class="settings-content">
+        <h3>Settings</h3>
+        <label for="openActionSetting">Enable Owlbear Action Open:</label>
+        <input type="checkbox" id="openActionSetting" />
+        <button id="closeSettings">Back</button>
+      </div>
+    </div>
+
+    <script type="module" src="/main.js"></script>
   </body>
 </html>

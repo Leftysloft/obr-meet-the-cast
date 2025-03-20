@@ -1,15 +1,22 @@
+<!-- settings.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+    <link rel="stylesheet" href="../style.css" />
   </head>
   <body>
-    <div><h3>The Cast</h3></div>
-    <div id="app"></div>
+    <h3>Settings</h3>
+
+    <!-- New setting to enable/disable OBR.action.open -->
+    <label for="openActionSetting">Enable Owlbear Action Open:</label>
+    <input type="checkbox" id="openActionSetting" />
+
+    <!-- Existing settings and back button -->
     <div class="button">
-      <button id="usageButton" type="button">Usage Guide</button>
+      <button id="backButton">Back</button>
     </div>
-    <script async="false" type="module" src="../settings/settings.js"></script>
   </body>
 </html>
