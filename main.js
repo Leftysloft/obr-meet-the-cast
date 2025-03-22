@@ -12,6 +12,16 @@ OBR.onReady(() => {
     </div>
   `;
 
+  // //Playing with players data
+  // async function showAllPlayerRoles() {
+  //   const players = await OBR.party.getPlayers();
+  //   const playerLines = players.map((p) => `${p.name}: ${p.role}`);
+  //   const message = playerLines.join(" • "); // or use "|", " // ", etc.
+  //   OBR.notification.show(message);
+  // }
+
+  // showAllPlayerRoles();
+
   const usageGuide = document.getElementById("usageButton");
   usageGuide.onclick = () => {
     window.open(
@@ -48,10 +58,10 @@ OBR.onReady(() => {
       }
     })
     .catch((error) => {
-      console.error("Error retrieving metadata:", error);
+      console.error("Error retrieving metadata. Check path.:", error);
     });
 
   setupContextMenu();
   setupSheetList(document.querySelector("#sheet-list"));
-  setupSettings(); // <--- THIS LINE FIXES THE WHOLE THING
+  setupSettings();
 });

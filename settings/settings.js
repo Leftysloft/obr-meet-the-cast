@@ -7,12 +7,9 @@ export function setupSettings() {
   const backButton = document.getElementById("closeSettings");
   const settingsOverlay = document.getElementById("settings-overlay");
   const openActionSetting = document.getElementById("openActionSetting");
-
-  // Log for debugging
-  // console.log("backButton:", backButton);
-  // console.log("settingsOverlay:", settingsOverlay);
-  // console.log("openActionSetting:", openActionSetting);
-  // console.log("metadata", OBR.room.getMetadata());
+  const openActionLabel = document.querySelector(
+    'label[for="openActionSetting"]'
+  );
 
   // Handle back button click
   if (backButton && settingsOverlay) {
@@ -25,31 +22,43 @@ export function setupSettings() {
     // console.warn("Back button or settings overlay not found.");
   }
 
-  // Load checkbox state from room metadata
-  if (openActionSetting) {
-    OBR.room
-      .getMetadata()
-      .then((metadata) => {
-        // Correct path using the ID
-        const isChecked = metadata?.[`${ID}/openActionEnabled`] ?? false;
-        openActionSetting.checked = isChecked;
-      })
-      .catch((error) => {
-        console.error("Error loading metadata:", error);
-      });
-
-    // Save state on checkbox change
-    openActionSetting.addEventListener("change", async () => {
-      try {
-        await OBR.room.setMetadata({
-          [`${ID}/openActionEnabled`]: openActionSetting.checked, // Correct path for the metadata
-        });
-        // console.log("Setting saved!");
-      } catch (error) {
-        console.error("Error saving setting:", error);
+  // Get the label and checkbox elements
+  OBR.player.getRole().then((role) => {
+    if (role !== "GM") {
+      // If not GM, change label text and hide the checkbox
+      if (openActionLabel) {
+        openActionLabel.innerText = "Under Construction"; // Change label text
       }
-    });
-  } else {
-    console.warn("Checkbox element 'openActionSetting' not found.");
-  }
+      if (openActionSetting) {
+        openActionSetting.style.display = "none"; // Hide the checkbox
+      }
+      return; // Skip further execution for non-GMs
+    }
+
+    // For GM only — load metadata and allow interaction with checkbox
+    if (openActionSetting) {
+      OBR.room
+        .getMetadata()
+        .then((metadata) => {
+          const isChecked = metadata?.[`${ID}/openActionEnabled`] ?? false;
+          openActionSetting.checked = isChecked;
+        })
+        .catch((error) => {
+          console.error("Error loading metadata:", error);
+        });
+
+      // Save state when checkbox changes
+      openActionSetting.addEventListener("change", async () => {
+        try {
+          await OBR.room.setMetadata({
+            [`${ID}/openActionEnabled`]: openActionSetting.checked,
+          });
+        } catch (error) {
+          console.error("Error saving setting:", error);
+        }
+      });
+    } else {
+      console.warn("Checkbox element 'openActionSetting' not found.");
+    }
+  });
 }
