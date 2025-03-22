@@ -226,7 +226,7 @@ button:focus-visible {
 .settings-content {
   background-color: #ffffff;
   color: #000000;
-  padding: 24px;
+  padding: 0px;
   border-radius: 16px;
   width: 400px;
   max-width: 90%;
