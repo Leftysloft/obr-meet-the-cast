@@ -17,10 +17,10 @@ export async function setupSheetList(element) {
           name: item.text.plainText,
           visible: metadata.visible,
           id: item.id,
+          ownerId: item.createdUserId,
         });
       }
     }
-
     // Sort alphabetically
     const sortedItems = sheetItems.sort((a, b) => a.name.localeCompare(b.name));
     const changedItems = [];
