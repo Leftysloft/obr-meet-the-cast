@@ -1,64 +1,84 @@
 import OBR from "@owlbear-rodeo/sdk";
 import { ID } from "../constants.js";
+import { setupSheetList } from "../sheetList.js";
+// import { settingUpdate } from "../sheetList";
+
+const SETTINGS_KEY = `${ID}/settings`;
+
+export async function updateSetting(key, value) {
+  const metadata = await OBR.room.getMetadata();
+  const currentSettings = metadata?.[SETTINGS_KEY] ?? {};
+
+  const updatedSettings = {
+    ...currentSettings,
+    [key]: value,
+  };
+
+  await OBR.room.setMetadata({
+    [SETTINGS_KEY]: updatedSettings,
+  });
+  setupSheetList;
+}
 
 export function setupSettings() {
-  // console.log("Settings.js is loaded");
-
   const backButton = document.getElementById("closeSettings");
   const settingsOverlay = document.getElementById("settings-overlay");
-  const openActionSetting = document.getElementById("openActionSetting");
-  const openActionLabel = document.querySelector(
-    'label[for="openActionSetting"]'
-  );
 
-  // Handle back button click
   if (backButton && settingsOverlay) {
     backButton.addEventListener("click", () => {
-      // console.log("Back button clicked!");
       settingsOverlay.classList.add("hidden");
-      // console.log("Overlay hidden.");
     });
-  } else {
-    // console.warn("Back button or settings overlay not found.");
   }
 
-  // Get the label and checkbox elements
-  OBR.player.getRole().then((role) => {
-    if (role !== "GM") {
-      // If not GM, change label text and hide the checkbox
-      if (openActionLabel) {
-        openActionLabel.innerText = "Under Construction"; // Change label text
-      }
-      if (openActionSetting) {
-        openActionSetting.style.display = "none"; // Hide the checkbox
-      }
-      return; // Skip further execution for non-GMs
+  const gmSettings = [
+    {
+      id: "openActionSetting",
+      label: "openActionSetting",
+      key: "openActionEnabled",
+      defaultValue: false,
+    },
+    {
+      id: "showInspirationSetting",
+      label: "showInspirationSetting",
+      key: "showInspiration",
+      defaultValue: true,
+    },
+  ];
+
+  OBR.player.getRole().then(async (role) => {
+    const isGM = role === "GM";
+    const metadata = isGM ? await OBR.room.getMetadata() : {};
+    const settings = isGM ? metadata?.[SETTINGS_KEY] ?? {} : {};
+
+    // console.log("Current Room Metadata:", metadata);
+    // console.log("Parsed Settings Object:", settings);
+
+    if (!isGM) {
+      const settingsContent = document.querySelector(".settings-content");
+      const constructionMessage = document.createElement("p");
+      constructionMessage.innerText =
+        "Settings are under construction. Please check back later.";
+      settingsContent.appendChild(constructionMessage);
+
+      document
+        .querySelectorAll("input[type='checkbox']")
+        .forEach((input) => (input.style.display = "none"));
+      document
+        .querySelectorAll("label")
+        .forEach((label) => (label.style.display = "none"));
+      return;
     }
 
-    // For GM only — load metadata and allow interaction with checkbox
-    if (openActionSetting) {
-      OBR.room
-        .getMetadata()
-        .then((metadata) => {
-          const isChecked = metadata?.[`${ID}/openActionEnabled`] ?? false;
-          openActionSetting.checked = isChecked;
-        })
-        .catch((error) => {
-          console.error("Error loading metadata:", error);
-        });
+    for (const setting of gmSettings) {
+      const input = document.getElementById(setting.id);
+      const label = document.querySelector(`label[for="${setting.label}"]`);
+      if (!input || !label) continue;
 
-      // Save state when checkbox changes
-      openActionSetting.addEventListener("change", async () => {
-        try {
-          await OBR.room.setMetadata({
-            [`${ID}/openActionEnabled`]: openActionSetting.checked,
-          });
-        } catch (error) {
-          console.error("Error saving setting:", error);
-        }
+      input.checked = settings?.[setting.key] ?? setting.defaultValue;
+
+      input.addEventListener("change", () => {
+        updateSetting(setting.key, input.checked);
       });
-    } else {
-      console.warn("Checkbox element 'openActionSetting' not found.");
     }
   });
 }

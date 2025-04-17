@@ -53,7 +53,7 @@ OBR.onReady(() => {
     .getMetadata()
     .then((metadata) => {
       // Update this line to use the correct path for openActionEnabled
-      if (metadata?.[`${ID}/openActionEnabled`]) {
+      if (metadata?.[`${ID}/settings`]?.openActionEnabled) {
         OBR.action.open();
       }
     })
@@ -62,6 +62,6 @@ OBR.onReady(() => {
     });
 
   setupContextMenu();
-  setupSheetList(document.querySelector("#sheet-list"));
   setupSettings();
+  setupSheetList(document.querySelector("#sheet-list"));
 });

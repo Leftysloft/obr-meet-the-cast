@@ -7,6 +7,13 @@ let cachedItems = [];
 export async function setupSheetList(element) {
   const renderList = async (items) => {
     const sheetItems = [];
+    console.log("sheetItems", sheetItems);
+
+    const roomMetadata = await OBR.room.getMetadata();
+    const settings = roomMetadata?.[`${ID}/settings`] ?? {};
+    const showInspiration = settings?.showInspiration ?? false;
+    console.log("Parsed Settings Object:", settings);
+    console.log("Inspiration", showInspiration);
 
     for (const item of items) {
       const metadata = item.metadata[`${ID}/metadata`];
@@ -18,10 +25,28 @@ export async function setupSheetList(element) {
           visible: metadata.visible,
           id: item.id,
           ownerId: item.createdUserId,
+          inspiration: showInspiration,
         });
       }
     }
-    // Sort alphabetically
+
+    const players = await OBR.party.getPlayers();
+    const playerIdSet = new Set(players.map((p) => p.id));
+
+    for (const sheetItem of sheetItems) {
+      if (playerIdSet.has(sheetItem.ownerId)) {
+        console.log(
+          `✅ Owner (feature) enabled for owner: ${sheetItem.ownerId}`
+        );
+        sheetItem.featureEnabled = true;
+      } else {
+        console.log(
+          `❌ Owner (feature) disabled for owner: ${sheetItem.ownerId}`
+        );
+        sheetItem.featureEnabled = false;
+      }
+    }
+
     const sortedItems = sheetItems.sort((a, b) => a.name.localeCompare(b.name));
     const changedItems = [];
 
@@ -31,16 +56,17 @@ export async function setupSheetList(element) {
         if (
           item.url !== cachedItem.url ||
           item.character_id !== cachedItem.character_id ||
-          item.visible !== cachedItem.visible
+          item.visible !== cachedItem.visible ||
+          item.inspiration !== cachedItem.inspiration
         ) {
           changedItems.push(item);
+          console.log("Changed Items", changedItems);
         }
       } else {
         changedItems.push(item);
       }
     });
 
-    // Remove nodes that are no longer in the sortedItems Array
     const ids = sortedItems.map((s) => s.id);
     cachedItems.forEach((cachedItem) => {
       if (!ids.includes(cachedItem.id)) {
@@ -52,21 +78,20 @@ export async function setupSheetList(element) {
     cachedItems = sortedItems;
 
     const playerRole = await OBR.player.getRole();
+
     changedItems.forEach((urlItem) => {
       const node = document.querySelector(`[data-id="${urlItem.id}"]`);
 
       if (node) {
-        if (!urlItem.visible) {
-          if (playerRole === "PLAYER") {
-            element.removeChild(node);
-          }
+        if (!urlItem.visible && playerRole === "PLAYER") {
+          element.removeChild(node);
         }
 
-        const embed = node.querySelector(".embed-view");
+        const embed = node.querySelector(".embed");
         if (embed) {
-          embed.src =
-            "http://lefty469.pythonanywhere.com/character_server?id=" +
-            urlItem.character_id;
+          const inspirationParam = showInspiration ? "true" : "false";
+          embed.src = `https://lefty469.pythonanywhere.com/character_server?id=${urlItem.character_id}&show_inspiration=${inspirationParam}`;
+          console.log("Updated embed URL with inspiration param:", embed.src);
         }
 
         const sheetLink = node.querySelector(".sheet-url");
@@ -81,43 +106,39 @@ export async function setupSheetList(element) {
           newNode.dataset.id = urlItem.id;
           newNode.classList.add("character-container");
 
-          // Name container
           const nameContainer = document.createElement("span");
           nameContainer.textContent = urlItem.name;
           nameContainer.classList.add("name-container");
 
-          // Create a new container to hold both portrait and icons
           const contentContainer = document.createElement("div");
           contentContainer.classList.add("content-container");
 
-          // Character portrait
           const portraitContainer = document.createElement("div");
           portraitContainer.classList.add("character-portrait-container");
 
           const portrait = document.createElement("embed");
-          // portrait.classList.add("embed-view");
           portrait.setAttribute("width", 160);
           portrait.setAttribute("height", 75);
+          portrait.classList.add("embed");
           portrait.setAttribute(
             "src",
-            "https://lefty469.pythonanywhere.com/character_server?id=" +
+            `https://lefty469.pythonanywhere.com/character_server?id=${
               urlItem.character_id
+            }&show_inspiration=${showInspiration ? "true" : "false"}`
           );
           portraitContainer.appendChild(portrait);
 
-          // Icon container
           const iconContainer = document.createElement("div");
           iconContainer.classList.add("icon-container");
 
-          // Edit Icon
           const editIcon = document.createElement("img");
           editIcon.setAttribute("src", "fa-pen-to-square.svg");
           editIcon.setAttribute(
             "title",
             "Click here to set your notes page (URL)"
           );
-          editIcon.setAttribute("width", 15);
-          editIcon.setAttribute("height", 15);
+          editIcon.setAttribute("width", 10);
+          editIcon.setAttribute("height", 10);
           editIcon.addEventListener("click", function () {
             const url = window.prompt(
               "Paste the link to your notebook here, then click the arrow next to your image",
@@ -130,7 +151,6 @@ export async function setupSheetList(element) {
           iconContainer.appendChild(editIcon);
 
           if (playerRole === "GM") {
-            // Visibility Checkbox
             const visibilityCheckbox = document.createElement("input");
             visibilityCheckbox.id = urlItem.id;
             visibilityCheckbox.setAttribute("type", "checkbox");
@@ -144,23 +164,20 @@ export async function setupSheetList(element) {
             iconContainer.appendChild(visibilityCheckbox);
           }
 
-          // Link Icon
           const linkIcon = document.createElement("img");
           linkIcon.setAttribute("src", "fa-circle-right.svg");
           linkIcon.classList.add("sheet-url");
           linkIcon.setAttribute("title", "View your notes page");
-          linkIcon.setAttribute("width", 15);
-          linkIcon.setAttribute("height", 15);
+          linkIcon.setAttribute("width", 10);
+          linkIcon.setAttribute("height", 10);
           linkIcon.addEventListener("click", function () {
             sheetFunction(`${urlItem.url}`);
           });
           iconContainer.appendChild(linkIcon);
 
-          // Append portrait and icons to the content container
           contentContainer.appendChild(portraitContainer);
           contentContainer.appendChild(iconContainer);
 
-          // Append elements in proper order
           newNode.appendChild(nameContainer);
           newNode.appendChild(contentContainer);
           element.appendChild(newNode);
@@ -168,10 +185,17 @@ export async function setupSheetList(element) {
       }
     });
   };
+
   OBR.scene.items.onChange(renderList);
+  OBR.room.onMetadataChange(async (meta) => {
+    const settings = meta?.[`${ID}/settings`] ?? {};
+    const showInspiration = settings?.showInspiration ?? false;
+    console.log("🌀 Metadata Changed — showInspiration:", showInspiration);
+    const items = await OBR.scene.items.getItems();
+    renderList(items);
+  });
 }
 
-// Set link (circle right) visible to players
 export async function visibileFunction(uuid) {
   const vis = document.getElementById(uuid).checked;
   OBR.scene.items.updateItems(
@@ -186,7 +210,6 @@ export async function visibileFunction(uuid) {
   );
 }
 
-//opens character's notebook
 export function sheetFunction(url) {
   if (url != "") {
     const windowFeatures = "left=100,top=100,width=600,height=800";
@@ -198,7 +221,6 @@ export function sheetFunction(url) {
   }
 }
 
-// Edit sheet url
 export async function editSheetFunction(uuid, url) {
   OBR.scene.items.updateItems(
     await OBR.scene.items.getItems([uuid]),
