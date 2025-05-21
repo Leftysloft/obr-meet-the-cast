@@ -1,0 +1,33 @@
+Character tab:
+	View characters *1
+		(this gives the DM the ability to hide characters that are not currently involved)
+	Click image *2
+		(this allows the image to be clicked and takes you to the DndB character sheet)
+
+Stats tab
+	Viewable stats *3
+		(view ability scores from dndb)
+	ICON - Notes page address setting (Player Only)
+		popup to add an address for a character private notes page
+	ICON - Open Notes page (Player / DM and Player / All)
+		(opens the characters private notes page)
+	
+Settings tab - DM only
+	*1 - View character on character and stats tab
+		(DM / All)
+	*2 - Clicking on Image opens dndb char sheet
+		(DM and player / All)
+	*3 - View Stats
+		(DM / DM and Player / All)
+	View Inspiration icon on character tab
+		(DM / All / None)
+	View HP bar on token
+		(All / None)
+	View AC on token
+		(All / None)
+
+
+Add options to limit who can view Notes (all/player/dm).
+Add option edit Notes (player/dm).
+Add option for HP-bar (all/player).
+Add option for who can view character sheet (all/player).

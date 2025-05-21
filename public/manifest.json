@@ -1,16 +1,16 @@
 {
   "icon": "/sample.png",
   "name": "Meet The Cast",
-  "version": "2.0.0.b",
-  "manifest_version": 2,
+  "version": "3.0.0",
+  "manifest_version": 3,
   "author": "Tiberius",
-  "description": "Popup that shows live data, including Class, HP, AC, and image from a DNDB character sheet.",
+  "description": "Popup that shows live data, including Name, Class, HP, AC, and image from a DNDB character sheet.",
   "homepage_url": "https://github.com/Leftysloft/obr-meet-the-cast/blob/main/README.md",
   "action": {
     "title": "Meet The Cast",
     "icon": "/heart.svg",
     "popover": "/",
-    "height": 2000,
+    "height": 2500,
     "width": 200
   }
 }

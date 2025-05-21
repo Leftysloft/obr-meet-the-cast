@@ -1,7 +1,5 @@
 import OBR from "@owlbear-rodeo/sdk";
 import { ID } from "../constants.js";
-import { setupSheetList } from "../sheetList.js";
-// import { settingUpdate } from "../sheetList";
 
 const SETTINGS_KEY = `${ID}/settings`;
 
@@ -13,23 +11,14 @@ export async function updateSetting(key, value) {
     ...currentSettings,
     [key]: value,
   };
+  console.log("current data", currentSettings);
 
   await OBR.room.setMetadata({
     [SETTINGS_KEY]: updatedSettings,
   });
-  setupSheetList;
 }
 
 export function setupSettings() {
-  const backButton = document.getElementById("closeSettings");
-  const settingsOverlay = document.getElementById("settings-overlay");
-
-  if (backButton && settingsOverlay) {
-    backButton.addEventListener("click", () => {
-      settingsOverlay.classList.add("hidden");
-    });
-  }
-
   const gmSettings = [
     {
       id: "openActionSetting",
@@ -50,34 +39,37 @@ export function setupSettings() {
     const metadata = isGM ? await OBR.room.getMetadata() : {};
     const settings = isGM ? metadata?.[SETTINGS_KEY] ?? {} : {};
 
-    // console.log("Current Room Metadata:", metadata);
-    // console.log("Parsed Settings Object:", settings);
-
     if (!isGM) {
-      const settingsContent = document.querySelector(".settings-content");
-      const constructionMessage = document.createElement("p");
-      constructionMessage.innerText =
-        "Settings are under construction. Please check back later.";
-      settingsContent.appendChild(constructionMessage);
-
-      document
-        .querySelectorAll("input[type='checkbox']")
-        .forEach((input) => (input.style.display = "none"));
-      document
-        .querySelectorAll("label")
-        .forEach((label) => (label.style.display = "none"));
+      const settingsContent = document.getElementById("settings-content");
+      settingsContent.innerHTML = `
+    <p class="dm-only-message">Settings are currently only for DM control.</p>
+    <p class="dm-only-message spacing-md">Please check back later as this app is evolving.</p>
+  `;
       return;
     }
 
     for (const setting of gmSettings) {
       const input = document.getElementById(setting.id);
-      const label = document.querySelector(`label[for="${setting.label}"]`);
-      if (!input || !label) continue;
+      if (!input) continue;
 
       input.checked = settings?.[setting.key] ?? setting.defaultValue;
-
       input.addEventListener("change", () => {
         updateSetting(setting.key, input.checked);
+      });
+    }
+
+    const labelInput = document.getElementById("detailsTabLabelSetting");
+    const labelEl = document.getElementById("details-tab-label");
+
+    if (labelInput) {
+      const savedLabel = settings?.detailsTabLabel ?? "Character's";
+      labelInput.value = savedLabel;
+      if (labelEl) labelEl.textContent = savedLabel;
+
+      labelInput.addEventListener("input", () => {
+        const newLabel = labelInput.value.trim() || "Character's";
+        updateSetting("detailsTabLabel", newLabel);
+        if (labelEl) labelEl.textContent = newLabel;
       });
     }
   });

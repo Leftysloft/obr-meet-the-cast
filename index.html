@@ -7,40 +7,71 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div><h3>The Cast</h3></div>
-
-    <div id="app">
-      <!-- Character Section will be dynamically populated here -->
-      <ul id="character-list"></ul>
+    <!-- Tab headers -->
+    <div class="tabs">
+<div class="tab active" data-tab="details-tab" id="details-tab-label">Character's</div>
+      <div class="tab" data-tab="main-tab">Settings</div>
+      <!-- <div class="tab" data-tab="extras-tab">Extras</div> -->
+      <!-- NEW tab -->
     </div>
 
-    <!-- Settings Icon Button -->
-    <div class="button">
-      <button id="settingsButton" type="button">
-        <img
-          src="/gears.png"
-          alt="Settings"
-          style="width: 24px; height: 24px"
-        />
-      </button>
-      <button id="usageButton" type="button">Usage Guide</button>
+    <!-- Character Details tab (default active) -->
+    <div id="details-tab" class="tab-content active">
+      <div id="character-details-container"></div>
     </div>
 
-    <!-- Settings Overlay (hidden initially) -->
-    <div id="settings-overlay" class="overlay hidden">
-      <div class="settings-content">
-        <h3>Settings</h3>
-        <label for="openActionSetting">Extension Auto Open:</label>
-        <input type="checkbox" id="openActionSetting" />
+    <!-- Main tab content -->
+    <div id="main-tab" class="tab-content">
+        <div><h3>Settings</h3></div><br><br><br><br>
+        <div id="settings-content">
+          <label for="openActionSetting">Extension Auto Open:</label>
+          <input type="checkbox" id="openActionSetting" />
 
-        <!-- New setting for show_inspiration -->
-        <label for="showInspirationSetting">Show Inspiration:</label>
-        <input type="checkbox" id="showInspirationSetting" />
+          <label for="showInspirationSetting">Show Inspiration:</label>
+          <input type="checkbox" id="showInspirationSetting" />
+                <div class="button"><br><br>
+        </button>
+              </div>
 
-        <button id="closeSettings">Back</button>
+        <label for="detailsTabLabelSetting">Set Page Name:<br></label>
+        <input type="text" id="detailsTabLabelSetting" placeholder="Character's" />
+<br><br>
+        <button id="usageButton" type="button">Usage Guide</button>
+              <div><h3>Click</h3></div>
+
+        </div>
+      </div>
+
+      <!-- Main app logic -->
+      <script type="module" src="/main.js"></script>
+    </div>
+
+    <!-- New Extras tab -->
+    <div id="extras-tab" class="tab-content">
+      <div id="extras-container">
+        <h3>Extras</h3>
+        <!-- Add anything you want here -->
+        <p>This tab is ready for new content.</p>
       </div>
     </div>
 
-    <script type="module" src="/main.js"></script>
+    <!-- Tab switching script -->
+    <script>
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab")
+            .forEach((t) => t.classList.remove("active"));
+          document
+            .querySelectorAll(".tab-content")
+            .forEach((c) => c.classList.remove("active"));
+
+          tab.classList.add("active");
+          document
+            .getElementById(tab.getAttribute("data-tab"))
+            .classList.add("active");
+        });
+      });
+    </script>
   </body>
 </html>
