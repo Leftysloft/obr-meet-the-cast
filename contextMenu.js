@@ -32,11 +32,17 @@ export async function setupContextMenu() {
       const addToURLS = context.items.every(
         (item) => item.metadata[`${ID}/metadata`] === undefined
       );
+
       if (addToURLS) {
-        const character_id = window.prompt(
-          "Enter ONLY the character <id> number from DnDBeyond.\nNOTE: This requires the DnDBeyond character sheet to have an image set."
+        let userInput = window.prompt(
+          "Enter your D&D Beyond character ID or full URL (e.g., https://www.dndbeyond.com/characters/64757559)."
         );
-        if (character_id >= 0 + !null)
+
+        // Extract character ID using regex
+        const match = userInput?.match(/(\d+)(?!.*\d)/); // grabs last group of digits
+        const character_id = match ? match[1] : null;
+
+        if (character_id) {
           OBR.scene.items.updateItems(context.items, (items) => {
             for (let item of items) {
               item.metadata[`${ID}/metadata`] = {
@@ -46,6 +52,11 @@ export async function setupContextMenu() {
               };
             }
           });
+        } else {
+          window.alert(
+            "Invalid input. Please enter a valid character ID or URL."
+          );
+        }
       } else {
         OBR.scene.items.updateItems(context.items, (items) => {
           for (let item of items) {
