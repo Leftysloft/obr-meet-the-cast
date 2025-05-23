@@ -21,13 +21,118 @@
         margin-top: 1rem;
         padding: 0.5rem 1rem;
       }
+
+      .stat-block {
+        background-color: #1f1f1f;
+        color: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-top: 1.5rem;
+        font-family: monospace;
+      }
+
+      .abilities,
+      .saving-throws,
+      .senses {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        text-align: center;
+      }
+
+      @media (min-width: 768px) {
+        .abilities {
+          grid-template-columns: repeat(6, 1fr);
+        }
+        .saving-throws,
+        .senses {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .stat-box {
+        background-color: #333;
+        padding: 1rem;
+        border-radius: 10px;
+      }
+
+      .score {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      .mod {
+        color: #ccc;
+        margin-top: 0.25rem;
+      }
+
+      .label {
+        text-transform: uppercase;
+        font-size: 1rem;
+        margin-top: 0.5rem;
+      }
+
+      .section h3 {
+        text-transform: uppercase;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: 1px;
+      }
+
+      .notes {
+        font-size: 0.9rem;
+        color: #90ee90;
+        margin-top: 0.5rem;
+      }
+
+      .darkvision {
+        text-align: center;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        color: #ccc;
+      }
+
+      hr {
+        border: none;
+        border-top: 2px solid #e0b400;
+        margin: 1.5rem 0;
+      }
     </style>
   </head>
   <body>
     <div class="character-card">
       <h2 id="char-name">Character Name</h2>
       <div id="stats">Loading stats...</div>
-      <div>Here is where we will add the character stats</div>
+      <div class="stat-block">
+        <!-- Ability Scores -->
+        <div class="abilities" id="abilities">
+          <!-- Will be populated by charStats.js -->
+        </div>
+
+        <hr />
+
+        <!-- Saving Throws -->
+        <div class="section">
+          <h3>Saving Throws (🟊 = Proficient)</h3>
+          <div class="saving-throws" id="savingThrows">
+            <!-- Will be populated by charStats.js -->
+          </div>
+          <div class="notes"></div>
+        </div>
+
+        <hr />
+
+        <!-- Senses
+        <div class="section">
+          <h3>Senses</h3>
+          <div class="senses">
+            <div class="stat-box">Passive Perception: 12</div>
+            <div class="stat-box">Passive Investigation: 11</div>
+            <div class="stat-box">Passive Insight: 12</div>
+          </div>
+          <div class="darkvision">Darkvision 60 ft.</div>
+        </div> -->
+      </div>
       <button id="closeBtn">Close</button>
     </div>
 

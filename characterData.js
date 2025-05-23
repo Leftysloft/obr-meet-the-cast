@@ -14,7 +14,7 @@ export async function fetchCharacterData(charId) {
     }
 
     const data = await response.json();
-    // console.log("Fetched character data:", data); // Log the fetched data for debugging
+    console.log("Fetched character data:", data); // Log the fetched data for debugging
 
     // You can modify this return statement as needed
     return data;

@@ -229,6 +229,7 @@ async function loadCharacterDetails(charId, data, item) {
   }
 
   const charNameEl = characterDiv.querySelector(".char-name");
+  const elementId = ID;
   if (!lastData || lastData.name !== data.name)
     charNameEl.textContent = data.name;
 
@@ -242,16 +243,11 @@ async function loadCharacterDetails(charId, data, item) {
       url: `/charStats.html?charId=${charId}&name=${encodeURIComponent(
         data.name
       )}&modalId=${encodeURIComponent(modalId)}`,
-      width: 450,
-      height: 500,
-      marginThreshold: 225,
-
-      anchorOrigin: {
-        horizontal: "LEFT",
-        vertical: "TOP",
-      },
-      transformOrigin: { horizontal: "LEFT", vertical: "TOP" },
+      width: 400,
+      height: 800,
+      transformOrigin: { horizontal: "RIGHT", vertical: "TOP" },
       anchorReference: "ELEMENT",
+      anchorPosition: { left: 1000, top: 5 },
     });
   };
 
