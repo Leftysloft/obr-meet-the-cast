@@ -333,6 +333,30 @@ button:focus-visible {
   display: none;
 }
 
+.charstats-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #000;
+  color: #fff;
+}
+
+.close-button {
+  align-self: center;
+  margin-top: 16px;
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #666;
+}
+
 .tabs {
   display: flex;
   /* border-bottom: 1px solid #ccc; */

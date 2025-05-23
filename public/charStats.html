@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Character Stats</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 1rem;
+      }
+
+      .character-card {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        border-radius: 8px;
+      }
+
+      button {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="character-card">
+      <h2 id="char-name">Character Name</h2>
+      <div id="stats">Loading stats...</div>
+      <div>Here is where we will add the character stats</div>
+      <button id="closeBtn">Close</button>
+    </div>
+
+    <script type="module" src="../src/charStats.js"></script>
+  </body>
+</html>

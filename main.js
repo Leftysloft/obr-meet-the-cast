@@ -228,8 +228,32 @@ async function loadCharacterDetails(charId, data, item) {
     }
   }
 
+  const charNameEl = characterDiv.querySelector(".char-name");
   if (!lastData || lastData.name !== data.name)
-    characterDiv.querySelector(".char-name").textContent = data.name;
+    charNameEl.textContent = data.name;
+
+  charNameEl.style.cursor = "pointer"; // indicate clickable
+
+  charNameEl.onclick = () => {
+    const modalId = `${ID}/modal/${charId}`;
+
+    OBR.popover.open({
+      id: modalId,
+      url: `/charStats.html?charId=${charId}&name=${encodeURIComponent(
+        data.name
+      )}&modalId=${encodeURIComponent(modalId)}`,
+      width: 450,
+      height: 500,
+      marginThreshold: 225,
+
+      anchorOrigin: {
+        horizontal: "LEFT",
+        vertical: "TOP",
+      },
+      transformOrigin: { horizontal: "LEFT", vertical: "TOP" },
+      anchorReference: "ELEMENT",
+    });
+  };
 
   if (!lastData || lastData.class !== data.class)
     characterDiv.querySelector(".char-class").innerHTML = `${data.class}`;
