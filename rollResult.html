@@ -1,0 +1,33 @@
+<!-- rollResults.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roll Result</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        padding: 10px;
+        background: #f4f4f4;
+      }
+      pre {
+        white-space: pre-wrap;
+        font-size: 14px;
+        background: white;
+        padding: 8px;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <pre id="result"></pre>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const content = params.get("content") || "No result";
+      document.getElementById("result").textContent = content;
+    </script>
+  </body>
+</html>
