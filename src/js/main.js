@@ -78,6 +78,7 @@ OBR.onReady(async () => {
       setupLightSheetList(extrasContainer);
     }
   });
+  console.log("connected ID", OBR.player.getId());
 });
 
 function handleSceneItems(items) {
@@ -144,7 +145,6 @@ async function loadCharacterDetails(charId, data, item) {
   const showToPlayers =
     item.metadata?.[`${ID}/metadata`]?.showToPlayers ?? false;
   const shouldShow = isGM || showToPlayers;
-
   const existingDiv = document.getElementById(charId); // <-- this was missing!
 
   // If the card exists but should no longer be shown, remove it

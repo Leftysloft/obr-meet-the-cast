@@ -6,11 +6,23 @@ function formatBonus(value) {
   return value >= 0 ? `+${value}` : `${value}`;
 }
 
+// Rollable stats
+function rollStat(label, mod) {
+  const d20 = Math.floor(Math.random() * 20) + 1;
+  const total = d20 + mod;
+  alert(
+    `${label} Roll:\n🎲 d20: ${d20}\nModifier: ${formatBonus(
+      mod
+    )}\nTotal: ${total}`
+  );
+}
+
 // Get query param
 function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
   return params.get(name);
 }
+
 function renderSavingThrows(stats) {
   const saveDiv = document.getElementById("savingThrows");
   saveDiv.innerHTML = "";
@@ -24,14 +36,28 @@ function renderSavingThrows(stats) {
     for (const abbr of row) {
       const data = stats[abbr];
       const saveMod = formatBonus(data.save);
-      const profMark = data.saveProficiency ? "🟊 " : "";
 
       const saveBox = document.createElement("div");
       saveBox.className = "stat-box";
+      saveBox.title = `Click to roll ${abbr.toUpperCase()} Save`;
+
+      // Proficiency star ONLY for saving throws
+      const profStar = data.saveProficiency
+        ? `<span class="prof-star">🟊</span>`
+        : "";
+
       saveBox.innerHTML = `
-        <div class="score">${profMark}${abbr.toUpperCase()}</div>
+        <div class="score">
+          ${profStar}
+          ${abbr.toUpperCase()}
+        </div>
         <div class="mod">${saveMod}</div>
       `;
+
+      saveBox.addEventListener("click", () =>
+        rollStat(`${abbr.toUpperCase()} Save`, data.save)
+      );
+
       saveDiv.appendChild(saveBox);
     }
   }
@@ -71,23 +97,29 @@ function renderSaveNotes(stats) {
   }
 }
 
-// Render abilities (STR, DEX, etc.)
+// Render abilities (STR, DEX, etc.) — NO proficiency stars here
 function renderAbilities(stats) {
   const abilitiesDiv = document.getElementById("abilities");
   abilitiesDiv.innerHTML = "";
 
-  // Correct 3x2 D&D Beyond layout
   const abilityOrder = ["str", "dex", "con", "int", "wis", "cha"];
 
   for (const abbr of abilityOrder) {
     const data = stats[abbr];
     const box = document.createElement("div");
     box.className = "stat-box";
+    box.title = `Click to roll ${abbr.toUpperCase()}`;
+
     box.innerHTML = `
       <div class="score">${data.score}</div>
       <div class="mod">${formatBonus(data.modifier)}</div>
       <div class="label">${abbr.toUpperCase()}</div>
     `;
+
+    box.addEventListener("click", () =>
+      rollStat(abbr.toUpperCase(), data.modifier)
+    );
+
     abilitiesDiv.appendChild(box);
   }
 }
@@ -120,8 +152,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     renderAbilities(data.stats);
-    renderSavingThrows(data.stats); // ✅ Add this line
-    renderSaveNotes(data.stats); // ✅ This line
+    renderSavingThrows(data.stats);
+    renderSaveNotes(data.stats);
 
     document.getElementById("stats").style.display = "none";
   } catch (err) {
