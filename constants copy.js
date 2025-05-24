@@ -1,1 +1,0 @@
-export const ID = "com.tiberius.healthbars";
