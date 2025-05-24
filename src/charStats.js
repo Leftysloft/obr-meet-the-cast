@@ -1,6 +1,11 @@
-import OBR from "@owlbear-rodeo/sdk";
-import { fetchCharacterData } from "../characterData.js";
+import OBR from "https://unpkg.com/@owlbear-rodeo/sdk?module";
 
+// Inline fetchCharacterData if it's simple, or move it into this file.
+async function fetchCharacterData(charId) {
+  // Replace with actual fetch logic or move logic inline
+  const res = await fetch(`/api/character/${charId}`);
+  return await res.json();
+}
 // Format +2 or -1
 function formatBonus(value) {
   return value >= 0 ? `+${value}` : `${value}`;
