@@ -239,9 +239,10 @@ async function loadCharacterDetails(charId, data, item) {
 
     OBR.popover.open({
       id: modalId,
-      url: `/charStats.html?charId=${charId}&name=${encodeURIComponent(
+      url: `/charStatsWrapper.html?charId=${charId}&name=${encodeURIComponent(
         data.name
       )}&modalId=${encodeURIComponent(modalId)}`,
+
       width: 450,
       height: 500,
       marginThreshold: 225,

@@ -1,0 +1,42 @@
+<!-- public/charStatsWrapper.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Char Stats Wrapper</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe id="stats-frame" src=""></iframe>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const charId = params.get("charId");
+      const name = params.get("name");
+      const modalId = params.get("modalId");
+
+      const queryParams = [];
+      if (charId) queryParams.push(`charId=${encodeURIComponent(charId)}`);
+      if (name) queryParams.push(`name=${encodeURIComponent(name)}`);
+      if (modalId) queryParams.push(`modalId=${encodeURIComponent(modalId)}`);
+
+      const iframe = document.getElementById("stats-frame");
+      iframe.src = `/charStats.html${
+        queryParams.length ? "?" + queryParams.join("&") : ""
+      }`;
+    </script>
+  </body>
+</html>
