@@ -1,10 +1,10 @@
 import "../style.css";
 import OBR from "@owlbear-rodeo/sdk";
-import { setupContextMenu } from "../contextMenu.js";
-import { setupSettings } from "../settings/settings.js";
-import { ID } from "../constants.js";
-import { fetchCharacterData } from "../characterData.js";
-import { setupLightSheetList } from "../lightSheetList.js";
+import { setupContextMenu } from "./contextMenu.js";
+import { setupSettings } from "./settings/settings.js";
+import { ID } from "./constants.js";
+import { fetchCharacterData } from "./characterData.js";
+import { setupLightSheetList } from "./lightSheetList.js";
 
 let pollingIntervals = {};
 let lastCharacterData = {};
