@@ -1,4 +1,4 @@
-import OBR from "@owlbear-rodeo/sdk";
+import OBR from "https://unpkg.com/@owlbear-rodeo/sdk?module";
 import { fetchCharacterData } from "../characterData.js";
 
 // Format +2 or -1

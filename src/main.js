@@ -1,5 +1,5 @@
 import "../style.css";
-import OBR from "@owlbear-rodeo/sdk";
+import OBR from "https://unpkg.com/@owlbear-rodeo/sdk?module";
 import { setupContextMenu } from "../contextMenu.js";
 import { setupSettings } from "../settings/settings.js";
 import { ID } from "../constants.js";
