@@ -249,7 +249,7 @@ async function loadCharacterDetails(charId, data, item) {
                 data.name
             )}&modalId=${encodeURIComponent(modalId)}`,
             width: 450,
-            height: 500,
+            height: 800,
             marginThreshold: 225,
 
             anchorOrigin: {
