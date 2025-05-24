@@ -1,5 +1,5 @@
 import OBR from "@owlbear-rodeo/sdk";
-import { fetchCharacterData } from "../characterData.js";
+import { fetchCharacterData } from "./characterData.js";
 
 // Format +2 or -1
 function formatBonus(value) {
