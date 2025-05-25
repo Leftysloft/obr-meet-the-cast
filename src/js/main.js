@@ -347,7 +347,7 @@ function showRollPopover(label, content) {
 
   OBR.popover.open({
     id: popoverId,
-    url: `/rollResult.html?label=${encodeURIComponent(
+    url: `${window.location.origin}/rollResult.html?label=${encodeURIComponent(
       label
     )}&content=${encodeURIComponent(content)}`,
     height: 150,
@@ -364,15 +364,16 @@ function showRollPopover(label, content) {
   }, 5000);
 }
 
-// Listen for broadcasted roll results from any player and show popover
-if (OBR.broadcast?.onMessage) {
-  OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
-    const { label, content } = event.data;
-    showRollPopover(label, content);
-  });
-} else {
-  console.warn("OBR.broadcast.onMessage is not available");
-}
+OBR.onReady(() => {
+  if (OBR.broadcast?.onMessage) {
+    OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
+      const { label, content } = event.data;
+      showRollPopover(label, content);
+    });
+  } else {
+    console.warn("OBR.broadcast.onMessage is not available");
+  }
+});
 
 function smoothTransitionHealthBar(healthBarFill, targetPercentage) {
   let currentWidth = parseFloat(healthBarFill.style.width) || 0;
