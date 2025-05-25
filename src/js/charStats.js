@@ -41,7 +41,7 @@ function renderSavingThrows(stats) {
 
       // Broadcast to others, if available
       if (OBR.broadcast?.sendMessage) {
-        console.log("Sending broadcast message", result);
+        // console.log("Sending broadcast message", result);
 
         OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
           label: result.label,
@@ -148,7 +148,7 @@ function renderAbilities(stats) {
 
       // Broadcast to others, if available
       if (OBR.broadcast?.sendMessage) {
-        console.log("Sending broadcast message", result);
+        // console.log("Sending broadcast message", result);
 
         OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
           label: result.label,
@@ -165,7 +165,7 @@ function renderAbilities(stats) {
 
 // Use OBR.onReady to ensure SDK is fully loaded before accessing OBR.broadcast
 OBR.onReady(async () => {
-  console.log("OBR is ready");
+  // console.log("OBR is ready");
 
   const charName = getQueryParam("name") || "Unknown";
   const charId = getQueryParam("charId");
@@ -201,7 +201,7 @@ OBR.onReady(async () => {
     // Listen for broadcasted roll results from other players, if available
     if (OBR.broadcast?.onMessage) {
       OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
-        console.log("Received broadcast message", event.data);
+        // console.log("Received broadcast message", event.data);
 
         const { label, content } = event.data;
         showRollPopover(label, content);

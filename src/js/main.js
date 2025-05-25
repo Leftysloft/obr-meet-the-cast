@@ -79,7 +79,7 @@ OBR.onReady(async () => {
     // setupLightSheetList(extrasContainer);
     // }
   });
-  console.log("connected ID", OBR.player.getId());
+  // console.log("connected ID", OBR.player.getId());
 });
 
 function handleSceneItems(items) {
@@ -221,10 +221,10 @@ async function loadCharacterDetails(charId, data, item) {
         const updatedItems = await OBR.scene.items.getItems();
         const updatedItem = updatedItems.find((i) => i.id === item.id);
 
-        console.log(
-          "Updated item metadata:",
-          updatedItem.metadata?.[`${ID}/metadata`]
-        );
+        // console.log(
+        //   "Updated item metadata:",
+        //   updatedItem.metadata?.[`${ID}/metadata`]
+        // );
       });
 
       checkbox.appendChild(input);
