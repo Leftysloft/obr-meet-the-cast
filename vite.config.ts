@@ -8,8 +8,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
-        charstats: resolve(__dirname, "charStats.html"),
-        rollUtils: resolve(__dirname, "rollresult.html"),
+        charStats: resolve(__dirname, "charStats.html"),
+        rollUtils: resolve(__dirname, "rollResult.html"),
       },
     },
   },
