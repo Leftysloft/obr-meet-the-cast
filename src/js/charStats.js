@@ -56,37 +56,37 @@ function renderSavingThrows(stats) {
   }
 }
 
-function showRollPopover(label, content) {
-  const popoverId = `roll-result-${Date.now()}`;
+// function showRollPopover(label, content) {
+//   const popoverId = `roll-result-${Date.now()}`;
 
-  OBR.popover.open({
-    id: popoverId,
-    url: `/rollResult.html?label=${encodeURIComponent(
-      label
-    )}&content=${encodeURIComponent(content)}`,
-    height: 150,
-    width: 250,
-    anchorPosition: {
-      top: 300, // Adjust these as needed for your layout
-      left: 500,
-    },
-    anchorReference: "POSITION",
-    anchorOrigin: {
-      horizontal: "CENTER",
-      vertical: "TOP",
-    },
-    transformOrigin: {
-      horizontal: "CENTER",
-      vertical: "TOP",
-    },
-    hidePaper: false,
-  });
+//   OBR.popover.open({
+//     id: popoverId,
+//     url: `/rollResult.html?label=${encodeURIComponent(
+//       label
+//     )}&content=${encodeURIComponent(content)}`,
+//     height: 150,
+//     width: 250,
+//     anchorPosition: {
+//       top: 300, // Adjust these as needed for your layout
+//       left: 500,
+//     },
+//     anchorReference: "POSITION",
+//     anchorOrigin: {
+//       horizontal: "CENTER",
+//       vertical: "TOP",
+//     },
+//     transformOrigin: {
+//       horizontal: "CENTER",
+//       vertical: "TOP",
+//     },
+//     hidePaper: false,
+//   });
 
-  // Automatically close the popover after 5 seconds
-  setTimeout(() => {
-    OBR.popover.close(popoverId);
-  }, 5000);
-}
+//   // Automatically close the popover after 5 seconds
+//   setTimeout(() => {
+//     OBR.popover.close(popoverId);
+//   }, 5000);
+// }
 
 function renderSaveNotes(stats) {
   const notesDiv = document.querySelector(".notes");
@@ -198,17 +198,17 @@ OBR.onReady(async () => {
 
     document.getElementById("stats").style.display = "none";
 
-    // Listen for broadcasted roll results from other players, if available
-    if (OBR.broadcast?.onMessage) {
-      OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
-        // console.log("Received broadcast message", event.data);
+    // // Listen for broadcasted roll results from other players, if available
+    // if (OBR.broadcast?.onMessage) {
+    //   OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
+    //     // console.log("Received broadcast message", event.data);
 
-        const { label, content } = event.data;
-        showRollPopover(label, content);
-      });
-    } else {
-      console.warn("OBR.broadcast.onMessage is not available");
-    }
+    //     const { label, content } = event.data;
+    //     showRollPopover(label, content);
+    //   });
+    // } else {
+    //   console.warn("OBR.broadcast.onMessage is not available");
+    // }
   } catch (err) {
     console.error(err);
     document.getElementById("stats").textContent = "Error loading character.";
