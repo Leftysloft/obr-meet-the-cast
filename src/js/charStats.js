@@ -1,4 +1,4 @@
-//charStats.js
+// charStats.js
 import OBR from "@owlbear-rodeo/sdk";
 import { fetchCharacterData } from "./characterData.js";
 import { rollStat, formatBonus } from "./rollUtils.js"; // ✅ Import both
@@ -35,7 +35,19 @@ function renderSavingThrows(stats) {
 
     box.addEventListener("click", () => {
       const result = rollStat(`${abbr.toUpperCase()} Save`, data.save);
+      // Show popover locally
       showRollPopover(result.label, result.display);
+      // Broadcast to others, if available
+      if (OBR.broadcast?.sendMessage) {
+        console.log("Sending broadcast message", result);
+
+        OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
+          label: result.label,
+          content: result.display,
+        });
+      } else {
+        console.warn("OBR.broadcast.sendMessage is not available");
+      }
     });
 
     saveDiv.appendChild(box);
@@ -121,14 +133,29 @@ function renderAbilities(stats) {
 
     box.addEventListener("click", () => {
       const result = rollStat(abbr.toUpperCase(), data.modifier);
+      // Show popover locally
       showRollPopover(result.label, result.display);
+      // Broadcast to others, if available
+      if (OBR.broadcast?.sendMessage) {
+        console.log("Sending broadcast message", result);
+
+        OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
+          label: result.label,
+          content: result.display,
+        });
+      } else {
+        console.warn("OBR.broadcast.sendMessage is not available");
+      }
     });
 
     abilitiesDiv.appendChild(box);
   }
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+// Use OBR.onReady to ensure SDK is fully loaded before accessing OBR.broadcast
+OBR.onReady(async () => {
+  console.log("OBR is ready");
+
   const charName = getQueryParam("name") || "Unknown";
   const charId = getQueryParam("charId");
   const modalId = getQueryParam("modalId");
@@ -159,6 +186,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderSaveNotes(data.stats);
 
     document.getElementById("stats").style.display = "none";
+
+    // Listen for broadcasted roll results from other players, if available
+    if (OBR.broadcast?.onMessage) {
+      OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
+        console.log("Received broadcast message", event.data);
+
+        const { label, content } = event.data;
+        showRollPopover(label, content);
+      });
+    } else {
+      console.warn("OBR.broadcast.onMessage is not available");
+    }
   } catch (err) {
     console.error(err);
     document.getElementById("stats").textContent = "Error loading character.";
