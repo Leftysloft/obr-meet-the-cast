@@ -3,20 +3,21 @@ import { resolve } from "path";
 
 declare var __dirname: string;
 export default defineConfig({
-    server: { host: "0.0.0.0", cors: true },
-    build: {
-        rollupOptions: {
-            input: {
-                main: resolve(__dirname, "index.html"),
-                charstats: resolve(__dirname, "charStats.html"),
-            },
-        },
+  server: { host: "0.0.0.0", cors: true },
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        charstats: resolve(__dirname, "charStats.html"),
+        rollUtils: resolve(__dirname, "rollresult.html"),
+      },
     },
-    css: {
-        preprocessorOptions: {
-            scss: {
-                api: "modern-compiler", // or "modern", "legacy"
-            },
-        },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern-compiler", // or "modern", "legacy"
+      },
     },
+  },
 });
