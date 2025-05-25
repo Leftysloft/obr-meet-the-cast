@@ -35,8 +35,10 @@ function renderSavingThrows(stats) {
 
     box.addEventListener("click", () => {
       const result = rollStat(`${abbr.toUpperCase()} Save`, data.save);
+
       // Show popover locally
       showRollPopover(result.label, result.display);
+
       // Broadcast to others, if available
       if (OBR.broadcast?.sendMessage) {
         console.log("Sending broadcast message", result);
@@ -133,8 +135,10 @@ function renderAbilities(stats) {
 
     box.addEventListener("click", () => {
       const result = rollStat(abbr.toUpperCase(), data.modifier);
+
       // Show popover locally
       showRollPopover(result.label, result.display);
+
       // Broadcast to others, if available
       if (OBR.broadcast?.sendMessage) {
         console.log("Sending broadcast message", result);
