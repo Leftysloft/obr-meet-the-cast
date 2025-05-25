@@ -57,15 +57,17 @@ function renderSavingThrows(stats) {
 }
 
 function showRollPopover(label, content) {
+  const popoverId = `roll-result-${Date.now()}`;
+
   OBR.popover.open({
-    id: `roll-result-${Date.now()}`,
+    id: popoverId,
     url: `/rollResult.html?label=${encodeURIComponent(
       label
     )}&content=${encodeURIComponent(content)}`,
     height: 150,
     width: 250,
     anchorPosition: {
-      top: 200, // <- World coordinates, adjust as needed
+      top: 200, // Adjust these as needed for your layout
       left: 300,
     },
     anchorReference: "POSITION",
@@ -79,6 +81,11 @@ function showRollPopover(label, content) {
     },
     hidePaper: false,
   });
+
+  // Automatically close the popover after 5 seconds
+  setTimeout(() => {
+    OBR.popover.close(popoverId);
+  }, 5000);
 }
 
 function renderSaveNotes(stats) {
