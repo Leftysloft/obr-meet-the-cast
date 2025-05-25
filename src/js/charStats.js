@@ -67,8 +67,8 @@ function showRollPopover(label, content) {
     height: 150,
     width: 250,
     anchorPosition: {
-      top: 200, // Adjust these as needed for your layout
-      left: 300,
+      top: 300, // Adjust these as needed for your layout
+      left: 500,
     },
     anchorReference: "POSITION",
     anchorOrigin: {
