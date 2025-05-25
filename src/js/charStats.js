@@ -36,9 +36,10 @@ function renderSavingThrows(stats) {
     box.addEventListener("click", () => {
       const result = rollStat(`${abbr.toUpperCase()} Save`, data.save);
 
-      // ❌ Removed local call to showRollPopover
+      // 🔁 Show result locally
+      showRollPopover(result.label, result.display); // <-- keep this in charStats.js
 
-      // ✅ Still send the roll result to other players
+      // 📡 Broadcast to others
       if (OBR.broadcast?.sendMessage) {
         OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
           label: result.label,
@@ -140,9 +141,10 @@ function renderAbilities(stats) {
     box.addEventListener("click", () => {
       const result = rollStat(`${abbr.toUpperCase()} Save`, data.save);
 
-      // ❌ Removed local call to showRollPopover
+      // 🔁 Show result locally
+      showRollPopover(result.label, result.display); // <-- keep this in charStats.js
 
-      // ✅ Still send the roll result to other players
+      // 📡 Broadcast to others
       if (OBR.broadcast?.sendMessage) {
         OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
           label: result.label,
