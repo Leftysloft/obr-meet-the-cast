@@ -342,7 +342,6 @@ async function loadCharacterDetails(charId, data, item) {
 
   lastCharacterData[charId] = { ...data };
 }
-
 function showRollPopover(label, content) {
   const popoverId = `roll-result-${Date.now()}`;
 
@@ -353,33 +352,21 @@ function showRollPopover(label, content) {
     )}&content=${encodeURIComponent(content)}`,
     height: 150,
     width: 250,
-    anchorPosition: {
-      top: 300, // Adjust these as needed for your layout
-      left: 500,
-    },
+    anchorPosition: { top: 300, left: 500 },
     anchorReference: "POSITION",
-    anchorOrigin: {
-      horizontal: "CENTER",
-      vertical: "TOP",
-    },
-    transformOrigin: {
-      horizontal: "CENTER",
-      vertical: "TOP",
-    },
+    anchorOrigin: { horizontal: "CENTER", vertical: "TOP" },
+    transformOrigin: { horizontal: "CENTER", vertical: "TOP" },
     hidePaper: false,
   });
 
-  // Automatically close the popover after 5 seconds
   setTimeout(() => {
     OBR.popover.close(popoverId);
   }, 5000);
 }
 
-// Listen for broadcasted roll results from other players, if available
+// Listen for broadcasted roll results from any player and show popover
 if (OBR.broadcast?.onMessage) {
   OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
-    // console.log("Received broadcast message", event.data);
-
     const { label, content } = event.data;
     showRollPopover(label, content);
   });
