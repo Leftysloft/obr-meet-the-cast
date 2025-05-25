@@ -5,7 +5,7 @@ import { setupContextMenu } from "./contextMenu.js";
 import { setupSettings } from "./settings/settings.js";
 import { ID } from "./constants.js";
 import { fetchCharacterData } from "./characterData.js";
-import { setupLightSheetList } from "./lightSheetList.js";
+// import { setupLightSheetList } from "./lightSheetList.js";
 
 let pollingIntervals = {};
 let lastCharacterData = {};
@@ -27,57 +27,57 @@ async function fetchInitialSettings() {
 
 OBR.onReady(async () => {
   OBR.scene.onReadyChange(async (ready) => {
-    if (ready) {
-      await fetchInitialSettings();
+    // if (ready) {  //added after chat-stats-popover
+    await fetchInitialSettings();
 
-      OBR.room.onMetadataChange((metadata) => {
-        const settings = metadata?.[`${ID}/settings`] ?? {};
-        updateInspirationVisibility(settings.showInspiration ?? true);
+    OBR.room.onMetadataChange((metadata) => {
+      const settings = metadata?.[`${ID}/settings`] ?? {};
+      updateInspirationVisibility(settings.showInspiration ?? true);
 
-        const labelEl = document.getElementById("details-tab-label");
-        if (labelEl && settings.detailsTabLabel) {
-          labelEl.textContent = settings.detailsTabLabel;
+      const labelEl = document.getElementById("details-tab-label");
+      if (labelEl && settings.detailsTabLabel) {
+        labelEl.textContent = settings.detailsTabLabel;
+      }
+    });
+
+    const usageGuide = document.getElementById("usageButton");
+    usageGuide.onclick = () => {
+      window.open(
+        "https://github.com/Leftysloft/obr-meet-the-cast/tree/main#readme",
+        "mozillaWindow",
+        "left=100,top=100,width=600,height=800"
+      );
+    };
+
+    OBR.scene.items.getItems().then((items) => {
+      handleSceneItems(items);
+    });
+
+    OBR.scene.items.onChange((items) => {
+      // console.log("Scene items changed or loaded:", items);
+      handleSceneItems(items);
+    });
+
+    OBR.room
+      .getMetadata()
+      .then((metadata) => {
+        if (metadata?.[`${ID}/settings`]?.openActionEnabled) {
+          OBR.action.open();
         }
+      })
+      .catch((error) => {
+        console.error("Error retrieving metadata. Check path.:", error);
       });
 
-      const usageGuide = document.getElementById("usageButton");
-      usageGuide.onclick = () => {
-        window.open(
-          "https://github.com/Leftysloft/obr-meet-the-cast/tree/main#readme",
-          "mozillaWindow",
-          "left=100,top=100,width=600,height=800"
-        );
-      };
-
-      OBR.scene.items.getItems().then((items) => {
-        handleSceneItems(items);
-      });
-
-      OBR.scene.items.onChange((items) => {
-        // console.log("Scene items changed or loaded:", items);
-        handleSceneItems(items);
-      });
-
-      OBR.room
-        .getMetadata()
-        .then((metadata) => {
-          if (metadata?.[`${ID}/settings`]?.openActionEnabled) {
-            OBR.action.open();
-          }
-        })
-        .catch((error) => {
-          console.error("Error retrieving metadata. Check path.:", error);
-        });
-
-      setupContextMenu();
-      // setupSheetList(document.querySelector("#sheet-list"));
-      setupSettings();
-      const extrasContainer = document.getElementById("extras-container");
-      OBR.scene.items.onChange(() => {
-        setupLightSheetList(document.getElementById("extras-container"));
-      });
-      setupLightSheetList(extrasContainer);
-    }
+    setupContextMenu();
+    // setupSheetList(document.querySelector("#sheet-list"));
+    setupSettings();
+    const extrasContainer = document.getElementById("extras-container");
+    // OBR.scene.items.onChange(() => {
+    //   setupLightSheetList(document.getElementById("extras-container"));
+    // });
+    // setupLightSheetList(extrasContainer);
+    // }
   });
   console.log("connected ID", OBR.player.getId());
 });
