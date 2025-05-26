@@ -113,8 +113,8 @@ OBR.onReady(async () => {
   // console.log("connected ID", OBR.player.getId());
   if (OBR.broadcast?.onMessage) {
     OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
-      const { label, content } = event.data;
-      showRollPopover(label, content);
+      const { label, content, name } = event.data;
+      showRollPopover(label, content, name);
     });
   } else {
     console.warn("Broadcast listener unavailable");

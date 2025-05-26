@@ -3,6 +3,8 @@ import OBR from "@owlbear-rodeo/sdk";
 import { fetchCharacterData } from "./characterData.js";
 import { rollStat, formatBonus } from "./rollUtils.js"; // ✅ Import both
 
+let charName = "Unknown";
+
 // Get query param
 function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
@@ -37,7 +39,7 @@ function renderSavingThrows(stats) {
       const result = rollStat(`${abbr.toUpperCase()} Save`, data.save);
 
       // Show popover locally
-      showRollPopover(result.label, result.display);
+      showRollPopover(result.label, result.display, charName);
 
       // Broadcast to others, if available
       if (OBR.broadcast?.sendMessage) {
@@ -46,6 +48,7 @@ function renderSavingThrows(stats) {
         OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
           label: result.label,
           content: result.display,
+          name: charName,
         });
       } else {
         console.warn("OBR.broadcast.sendMessage is not available");
@@ -56,18 +59,18 @@ function renderSavingThrows(stats) {
   }
 }
 
-function showRollPopover(label, content) {
+function showRollPopover(label, content, name = "Unknown") {
   const popoverId = `roll-result-${Date.now()}`;
 
   OBR.popover.open({
     id: popoverId,
     url: `/rollResult.html?label=${encodeURIComponent(
       label
-    )}&content=${encodeURIComponent(content)}`,
+    )}&content=${encodeURIComponent(content)}&name=${encodeURIComponent(name)}`,
     height: 150,
     width: 250,
     anchorPosition: {
-      top: 300, // Adjust these as needed for your layout
+      top: 300,
       left: 500,
     },
     anchorReference: "POSITION",
@@ -82,7 +85,6 @@ function showRollPopover(label, content) {
     hidePaper: false,
   });
 
-  // Automatically close the popover after 5 seconds
   setTimeout(() => {
     OBR.popover.close(popoverId);
   }, 5000);
@@ -153,6 +155,7 @@ function renderAbilities(stats) {
         OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
           label: result.label,
           content: result.display,
+          name: charName,
         });
       } else {
         console.warn("OBR.broadcast.sendMessage is not available");
@@ -167,7 +170,7 @@ function renderAbilities(stats) {
 OBR.onReady(async () => {
   // console.log("OBR is ready");
 
-  const charName = getQueryParam("name") || "Unknown";
+  charName = getQueryParam("name") || "Unknown";
   const charId = getQueryParam("charId");
   const modalId = getQueryParam("modalId");
 

@@ -1,3 +1,4 @@
+<!-- rollResult.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -23,10 +24,15 @@
     <script type="module" src="src/js/rollUtils.js"></script>
   </head>
   <body>
+    <h3 id="name-label"></h3>
     <pre id="result"></pre>
     <script>
       const params = new URLSearchParams(window.location.search);
+      const label = params.get("label") || "Roll";
       const content = params.get("content") || "No result";
+      const name = params.get("name") || "Unknown";
+
+      document.getElementById("name-label").textContent = `${name} - ${label}`;
       document.getElementById("result").textContent = content;
     </script>
   </body>
