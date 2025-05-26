@@ -9,8 +9,7 @@ NOTICE: (22Mar2024) This is best done using the **_OBR Prefab extension_**, as i
 
 1. Select your characters and creat a new **_Prefab Scene_**.
 
-2. Copy your character ID from the DnDBeyond character sheet.
-   **_Your character requires an image for functionality. I am working on a fix_**
+2. Copy your character ID or full URL from the DnDBeyond character sheet.
 
    ![1](/screenshots/copy-url.png)
 
