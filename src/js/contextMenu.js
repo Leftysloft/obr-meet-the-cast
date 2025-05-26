@@ -35,7 +35,7 @@ export async function setupContextMenu() {
 
       if (addToURLS) {
         let userInput = window.prompt(
-          "Enter your D&D Beyond character ID or full URL (e.g., https://www.dndbeyond.com/characters/64757559)."
+          "Enter your D&D Beyond character ID or full URL (e.g., https://www.dndbeyond.com/characters/########)."
         );
 
         // Extract character ID using regex
