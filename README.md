@@ -1,6 +1,6 @@
 # obr-meet-the-cast
 
-https://buymeacoffee.com/tiberius_obr
+<strong>https://buymeacoffee.com/tiberius_obr</strong>
 
 ![0](/screenshots/buy-me-a-coffee.png)
 
