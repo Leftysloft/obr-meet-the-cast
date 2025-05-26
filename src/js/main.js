@@ -25,6 +25,37 @@ async function fetchInitialSettings() {
   updateInspirationVisibility(settings.showInspiration ?? true);
 }
 
+function showRollPopover(label, content) {
+  const popoverId = `roll-result-${Date.now()}`;
+
+  OBR.popover.open({
+    id: popoverId,
+    url: `/rollResult.html?label=${encodeURIComponent(
+      label
+    )}&content=${encodeURIComponent(content)}`,
+    height: 150,
+    width: 250,
+    anchorPosition: {
+      top: 300,
+      left: 500,
+    },
+    anchorReference: "POSITION",
+    anchorOrigin: {
+      horizontal: "CENTER",
+      vertical: "TOP",
+    },
+    transformOrigin: {
+      horizontal: "CENTER",
+      vertical: "TOP",
+    },
+    hidePaper: false,
+  });
+
+  setTimeout(() => {
+    OBR.popover.close(popoverId);
+  }, 5000);
+}
+
 OBR.onReady(async () => {
   OBR.scene.onReadyChange(async (ready) => {
     // if (ready) {  //added after chat-stats-popover
@@ -80,6 +111,14 @@ OBR.onReady(async () => {
     // }
   });
   // console.log("connected ID", OBR.player.getId());
+  if (OBR.broadcast?.onMessage) {
+    OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
+      const { label, content } = event.data;
+      showRollPopover(label, content);
+    });
+  } else {
+    console.warn("Broadcast listener unavailable");
+  }
 });
 
 function handleSceneItems(items) {

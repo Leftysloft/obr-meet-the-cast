@@ -198,17 +198,17 @@ OBR.onReady(async () => {
 
     document.getElementById("stats").style.display = "none";
 
-    // Listen for broadcasted roll results from other players, if available
-    if (OBR.broadcast?.onMessage) {
-      OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
-        // console.log("Received broadcast message", event.data);
+    // // Listen for broadcasted roll results from other players, if available
+    // if (OBR.broadcast?.onMessage) {
+    //   OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
+    //     // console.log("Received broadcast message", event.data);
 
-        const { label, content } = event.data;
-        showRollPopover(label, content);
-      });
-    } else {
-      console.warn("OBR.broadcast.onMessage is not available");
-    }
+    //     const { label, content } = event.data;
+    //     showRollPopover(label, content);
+    //   });
+    // } else {
+    //   console.warn("OBR.broadcast.onMessage is not available");
+    // }
   } catch (err) {
     console.error(err);
     document.getElementById("stats").textContent = "Error loading character.";
