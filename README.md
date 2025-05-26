@@ -22,7 +22,8 @@ NOTICE: (22Mar2024) This is best done using the **_OBR Prefab extension_**, as i
 
 5. The settings page allows you to seet the extension to auto open on page load (helpful for casting).
    It also give DM control over showing the inspiration star.
-   Lastly (for now), you can alter the name of the character's page. This is still buggy from the players point of view, but on my list.
+   Lastly (for now), you can alter the name of the character's page.
+   This is still buggy from the players point of view, but on my list.
    ![4](/screenshots/dm-view-2.png)
 
 6. All data in this extension will update dynamically when affected on DnDBeyond.
