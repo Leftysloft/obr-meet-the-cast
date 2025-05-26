@@ -1,8 +1,6 @@
 /* style.css */
+
 :root {
-  display: flex;
-  justify-content: left;
-  flex-direction: row-reverse;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1;
   font-weight: 100;
@@ -16,44 +14,48 @@
   -webkit-text-size-adjust: 100%;
 }
 
+body {
+  overflow: auto;
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  text-align: left;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: normal;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  background-color: inherit;
+}
+
+/* Sheet List */
 #sheet-list {
   width: auto;
 }
 
-/* Style for the health bar container */
+/* Health Bar */
 .healthbar {
   width: 25%;
   height: 5px;
   border: 1px solid #000000;
   border-radius: 5px;
   background-color: #ff0000;
-  margin-top: 0px;
+  margin-top: 0;
   position: relative;
   overflow: hidden;
 }
 
-/* Style for the fill inside the health bar */
 .healthbar-fill {
   height: 100%;
   border-radius: 10px;
-  background-color: #4caf50; /* Green color for health */
-  /* Remove the transition from here to let JavaScript control the animation */
-  /* transition: width 0.8s ease-in-out; */
+  background-color: #4caf50; /* Green health */
+  /* Transition disabled for JS control */
 }
 
-/* Optional: If you want to show the health as a percentage
-.healthbar-text {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  font-size: 12px;
-  color: #333;
-  top: 50%;
-  transform: translateY(-50%);
-} */
-
+/* Inspiration Stars */
 .inspiration-star {
-  font-size: 1.2em; /* Adjust the size as needed */
+  font-size: 1.2em;
 }
 
 .inspiration-star.filled {
@@ -62,9 +64,10 @@
 
 .inspiration-star.outlined {
   color: transparent;
-  -webkit-text-stroke: 1px rgb(145, 145, 145); /* White outline */
+  -webkit-text-stroke: 1px rgb(145, 145, 145); /* Outline */
 }
 
+/* Content Containers */
 .content-container {
   display: flex;
   width: 150px;
@@ -76,12 +79,11 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: end;
-  width: 100%;
-  margin-bottom: -6px;
-  margin-right: 0px;
+  align-items: flex-end;
   width: 117px;
   height: 75px;
+  margin-bottom: -6px;
+  margin-right: 0;
 }
 
 .embed-view {
@@ -90,6 +92,7 @@
   border: none;
 }
 
+/* Icons */
 .icon-container {
   display: flex;
   flex-direction: column;
@@ -98,7 +101,7 @@
   margin-left: auto;
   max-width: 15px;
   align-items: center;
-  height: 0px;
+  height: 0;
   width: 15px;
 }
 
@@ -112,19 +115,34 @@
   transform: scale(1.1);
 }
 
+/* Lists */
+ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-weight: normal;
+  border: thin solid blue;
+  padding: 4px;
+  margin-top: 3px;
+  margin-right: 0;
+  font-size: large;
+  list-style: none;
+}
+
 li {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 10px;
-  padding-top: 0em;
-  padding-bottom: 0px;
+  padding: 10px 10px 0 10px;
   border-bottom: 1px solid blue;
 }
 
+/* Links */
 a {
   display: flex;
-  justify-content: left;
+  justify-content: flex-start;
   font-weight: 100;
   color: #ffffff;
   text-decoration: inherit;
@@ -134,73 +152,40 @@ a:hover {
   color: #ffffff;
 }
 
-body {
-  overflow: auto;
-  position: absolute;
-  display: flex;
-  justify-content: left;
-  text-align: left;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: normal;
-}
-
-ul {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  font-weight: normal;
-  border: solid;
-  border-width: thin;
-  border-color: blue;
-  padding: 4px;
-  margin-top: 3px;
-  margin-right: 0px;
-  font-size: large;
-  list-style: none;
-}
-
+/* Headings */
 h1 {
   font-size: 3em;
   line-height: 1.1;
 }
 
 h3 {
-  margin: 1px;
+  margin: 1px 0;
 }
 
 h4 {
-  display: block;
-  margin-block-start: 1.33em;
-  margin-block-end: 1.33em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
   font-weight: bold;
   unicode-bidi: isolate;
-  margin-bottom: 1px;
+  margin: 1.33em 0 1px 0;
+  display: block;
 }
 
+/* App Container */
 #app {
   display: flex;
   max-width: 65px;
-  justify-content: left;
+  justify-content: flex-start;
   padding-top: 1px;
   text-align: center;
 }
 
+/* Paragraphs */
 p {
   display: block;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
+  margin: 1em 0 1px 0;
   unicode-bidi: isolate;
-  margin-bottom: 1px;
-  margin-top: 1px;
 }
 
+/* DM Message */
 .dm-only-message {
   padding-top: 5px;
   font-size: 18px;
@@ -208,13 +193,24 @@ p {
   font-style: italic;
 }
 
+/* Spacing utilities */
+.spacing-xs {
+  margin-top: 4px;
+}
+.spacing-sm {
+  margin-top: 8px;
+}
 .spacing-md {
   margin-top: 12px;
 }
 .spacing-lg {
   margin-top: 24px;
 }
+.spacing-xl {
+  margin-top: 36px;
+}
 
+/* Logo */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -227,21 +223,25 @@ p {
   filter: drop-shadow(0 0 2em #ffffffaa);
 }
 
+/* Card */
 .card {
   padding: 2em;
 }
 
+/* Documentation link */
 .read-the-docs {
   color: #ffffff;
 }
 
+/* Character container */
 .character {
   display: flex;
 }
 
+/* Buttons */
 button {
   position: relative;
-  text-wrap: nowrap;
+  white-space: nowrap;
   border-radius: 20px;
   border: 1px solid #d91f1f;
   padding: 0.1em 0.8em;
@@ -263,6 +263,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Name Container */
 .name-container {
   font-size: 1.2em;
   font-weight: bold;
@@ -273,10 +274,9 @@ button:focus-visible {
   width: 100%;
 }
 
+/* Media queries */
 @media (prefers-color-scheme: light) {
   :root {
-    display: flex;
-    justify-content: left;
     color: #ffffff;
     background-color: #000000;
   }
@@ -286,7 +286,6 @@ button:focus-visible {
   }
 
   button {
-    position: relative;
     background-color: #f9f9f9;
   }
 }
@@ -303,7 +302,7 @@ button:focus-visible {
   }
 }
 
-/* === Settings Modal Overlay === */
+/* Settings Modal Overlay */
 #settings-overlay {
   position: fixed;
   top: 0;
@@ -317,25 +316,28 @@ button:focus-visible {
   z-index: 9999;
 }
 
-.settings-content {
-  background-color: #ffffff;
-  color: #000000;
-  padding: 0px;
-  border-radius: 16px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  position: relative;
-  text-align: center;
-}
-
 #settings-overlay.hidden {
   display: none;
 }
 
+.settings-content {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 0;
+  border-radius: 16px;
+  width: 200px;
+  max-width: 90%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+  text-align: center;
+  display: flex;
+}
+
+/* Tabs */
 .tabs {
   display: flex;
-  /* border-bottom: 1px solid #ccc; */
+  padding: 6px;
+  padding-bottom: 0px;
 }
 
 .tab {
@@ -346,10 +348,11 @@ button:focus-visible {
   background-color: #000000;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
+  margin-right: 4px;
 }
 
-.tab:not(:last-child) {
-  margin-right: 4px; /* or whatever space you want */
+.tab:last-child {
+  margin-right: 0;
 }
 
 .tab.active {
@@ -358,17 +361,19 @@ button:focus-visible {
   font-style: italic;
 }
 
+/* Tab content */
 .tab-content {
   display: none;
 }
 
 .tab-content.active {
   display: block;
+  padding: 5px;
+  padding-top: 0px;
 }
 
-/* Style for each character detail container */
+/* Character Detail */
 .character-detail {
-  /* border: 1px solid #ccc; */
   margin: 10px;
   padding: 10px;
 }
@@ -379,8 +384,8 @@ button:focus-visible {
   padding: 4px;
   display: flex;
   flex-direction: column;
-  gap: 0px;
-  max-width: 300px; /* Optional: to keep consistent width */
+  gap: 0;
+  max-width: 300px;
 }
 
 .char-header {
@@ -391,14 +396,12 @@ button:focus-visible {
 
 .char-name {
   font-size: 1em;
-  margin: 0;
-  margin-bottom: 3px;
+  margin: 0 0 3px 0;
   font-style: italic;
 }
 
 .char-class {
   font-size: 1em;
-  /* margin-left: 22; */
 }
 
 .char-body {
@@ -406,7 +409,7 @@ button:focus-visible {
   justify-content: flex-start;
   align-items: flex-start;
   gap: 5px;
-  padding-bottom: 0px;
+  padding-bottom: 0;
   margin-top: 3px;
 }
 
@@ -438,39 +441,11 @@ button:focus-visible {
 .char-hp,
 .char-ac,
 .char-inspiration {
-  margin: 0px;
+  margin: 0;
 }
 
 .char-ac,
 .char-inspiration {
   margin-top: -3px;
   display: flex;
-}
-
-.spacing-xs {
-  margin-top: 4px;
-}
-.spacing-sm {
-  margin-top: 8px;
-}
-.spacing-md {
-  margin-top: 12px;
-}
-.spacing-lg {
-  margin-top: 24px;
-}
-.spacing-xl {
-  margin-top: 36px;
-}
-.settings-content {
-  display: flex;
-  background-color: #ffffff;
-  color: #000000;
-  padding: 0px;
-  border-radius: 16px;
-  width: 200px;
-  max-width: 90%;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  position: relative;
-  text-align: center;
 }
