@@ -1,9 +1,7 @@
 # obr-meet-the-cast
 
 <strong>I Like Coffee</strong>
-<strong>https://buymeacoffee.com/tiberius_obr</strong>
-
-![0](/screenshots/buy-me-a-coffee.png)
+<a href="https://buymeacoffee.com/tiberius_obr"><img src= "/screenshots/buy-me-a-coffee.png"></img></a>
 
 Extension for Owlbear Rodeo 2 to add a character interaction sheet.
 To use this app extension, the character sheet on DnDBeyond **_MUST_** be set to **_public_**.
