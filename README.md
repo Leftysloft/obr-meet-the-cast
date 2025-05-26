@@ -13,7 +13,7 @@ NOTICE: (22Mar2024) This is best done using the **_OBR Prefab extension_**, as i
 
    ![1](/screenshots/copy-url.png)
 
-3. Click Add to character sheet and paste character ID from step 1.
+3. Click Add to character sheet and paste character ID from step 2.
    ![2](/screenshots/add-and-paste-url.png)
 
 4. Clicking on the extension icon will open the view, and the image from the characget sheet will be displayed with some icons.
