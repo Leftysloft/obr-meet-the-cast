@@ -30,11 +30,11 @@ NOTICE: (22Mar2024) This is best done using the **_OBR Prefab extension_**, as i
 
 6. All data in this extension will update dynamically when affected on DnDBeyond.
 
-7. These are the current features from the extension.
-   ![6](/screenshots/features.png)
+<!-- 7. These are the current features from the extension.
+   ![6](/screenshots/features.png) -->
 
-https://github.com/Leftysloft/obr-ext-healthbars/assets/5694639/919fa4b0-5441-4150-9fff-6b335cfe7f11
+<!-- https://github.com/Leftysloft/obr-ext-healthbars/assets/5694639/919fa4b0-5441-4150-9fff-6b335cfe7f11 -->
 
-7. You can drag the app around the map window.
+8. You can drag the app around the map window.
 
 https://github.com/Leftysloft/obr-ext-healthbars/assets/5694639/d9c20dda-cd11-48d7-916b-d77e278bbc47
