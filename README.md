@@ -16,12 +16,13 @@ NOTICE: (22Mar2024) This is best done using the **_OBR Prefab extension_**, as i
 3. Click Add to character sheet and paste character ID from step 2.
    ![2](/screenshots/add-and-paste-url.png)
 
-4. Clicking on the extension icon will open the view, and the image from the characget sheet will be displayed with some icons.
+4. Clicking on the extension icon will open the view, revealing the character's image from DndBeyond, along with current health, AC, name, class(es). Also, there is a setting (see below) to show if a player has inspiration or not.
+   The DM/GM here has a checkbox: "Enable Player View". This will show or hide the character
    ![3](/screenshots/dm-view.png)
 
 5. The settings page allows you to seet the extension to auto open on page load (helpful for casting).
    It also give DM control over showing the inspiration star.
-   Lastly (for now), you can alter the name of the character's page. (this is still buggy from the players point of view, but on my list.
+   Lastly (for now), you can alter the name of the character's page. This is still buggy from the players point of view, but on my list.
    ![4](/screenshots/dm-view-2.png)
 
 6. All data in this extension will update dynamically when affected on DnDBeyond.

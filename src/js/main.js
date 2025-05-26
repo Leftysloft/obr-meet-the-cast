@@ -267,7 +267,7 @@ async function loadCharacterDetails(charId, data, item) {
       });
 
       checkbox.appendChild(input);
-      checkbox.appendChild(document.createTextNode("Show to players"));
+      checkbox.appendChild(document.createTextNode("Enable Player View"));
       characterDiv.appendChild(checkbox);
     }
   }
