@@ -2,7 +2,7 @@
 
 https://buymeacoffee.com/tiberius_obr
 
-/screenshots/1_9LAiIJ09lU4B4QtygYkdSw.webp
+(/screenshots/1_9LAiIJ09lU4B4QtygYkdSw.webp)
 
 Extension for Owlbear Rodeo 2 to add a character interaction sheet.
 To use this app extension, the character sheet on DnDBeyond **_MUST_** be set to **_public_**.
