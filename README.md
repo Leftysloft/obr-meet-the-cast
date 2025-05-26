@@ -17,7 +17,8 @@ NOTICE: (22Mar2024) This is best done using the **_OBR Prefab extension_**, as i
    ![2](/screenshots/add-and-paste-url.png)
 
 4. Clicking on the extension icon will open the view, and the image from the characget sheet will be displayed with some icons.
-   ![3](/screenshots/dm-view.png) !(/screenshots/dm-view-2.png)
+   ![3](/screenshots/dm-view.png)
+   ![3](/screenshots/dm-view-2.png)
 
 5. The healthbar under the image, and the stats to the right will update dynamically when affected on DnDBeyond.
    ![4]
