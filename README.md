@@ -1,6 +1,6 @@
 # obr-meet-the-cast
 
-<strong>I Like Coffee</strong>
+<strong>I <br>Like <br>Coffee</strong>
 <a href="https://buymeacoffee.com/tiberius_obr"><img src= "/screenshots/buy-me-a-coffee.png" width="50" height="50"></img></a>
 
 Extension for Owlbear Rodeo 2 to add a character interaction sheet.
