@@ -11,7 +11,7 @@ function getQueryParam(name) {
   return params.get(name);
 }
 
-function renderSavingThrows(stats) {
+function renderSavingThrows(stats, name) {
   const saveDiv = document.getElementById("savingThrows");
   saveDiv.innerHTML = "";
 
@@ -38,17 +38,13 @@ function renderSavingThrows(stats) {
     box.addEventListener("click", () => {
       const result = rollStat(`${abbr.toUpperCase()} Save`, data.save);
 
-      // Show popover locally
-      showRollPopover(result.label, result.display, charName);
+      showRollPopover(result.label, result.display, name);
 
-      // Broadcast to others, if available
       if (OBR.broadcast?.sendMessage) {
-        // console.log("Sending broadcast message", result);
-
         OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
           label: result.label,
           content: result.display,
-          name: charName,
+          name: name,
         });
       } else {
         console.warn("OBR.broadcast.sendMessage is not available");
@@ -124,7 +120,7 @@ function renderSaveNotes(stats) {
   }
 }
 
-function renderAbilities(stats) {
+function renderAbilities(stats, name) {
   const abilitiesDiv = document.getElementById("abilities");
   abilitiesDiv.innerHTML = "";
 
@@ -145,17 +141,13 @@ function renderAbilities(stats) {
     box.addEventListener("click", () => {
       const result = rollStat(abbr.toUpperCase(), data.modifier);
 
-      // Show popover locally
-      showRollPopover(result.label, result.display);
+      showRollPopover(result.label, result.display, name);
 
-      // Broadcast to others, if available
       if (OBR.broadcast?.sendMessage) {
-        // console.log("Sending broadcast message", result);
-
         OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
           label: result.label,
           content: result.display,
-          name: charName,
+          name: name,
         });
       } else {
         console.warn("OBR.broadcast.sendMessage is not available");
@@ -168,13 +160,13 @@ function renderAbilities(stats) {
 
 // Use OBR.onReady to ensure SDK is fully loaded before accessing OBR.broadcast
 OBR.onReady(async () => {
-  // console.log("OBR is ready");
+  const nameFromParams = getQueryParam("name") || "Unknown";
+  charName = nameFromParams;
 
-  charName = getQueryParam("name") || "Unknown";
   const charId = getQueryParam("charId");
   const modalId = getQueryParam("modalId");
 
-  document.getElementById("char-name").textContent = charName;
+  document.getElementById("char-name").textContent = nameFromParams;
   document.getElementById("stats").textContent = charId
     ? `Character ID: ${charId}`
     : "No Character ID";
@@ -195,8 +187,8 @@ OBR.onReady(async () => {
       return;
     }
 
-    renderAbilities(data.stats);
-    renderSavingThrows(data.stats);
+    renderAbilities(data.stats, nameFromParams);
+    renderSavingThrows(data.stats, nameFromParams);
     renderSaveNotes(data.stats);
 
     document.getElementById("stats").style.display = "none";
