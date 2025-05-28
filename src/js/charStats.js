@@ -73,7 +73,7 @@ function showRollPopover(label, content, name = "Unknown") {
       label
     )}&content=${encodeURIComponent(content)}&name=${encodeURIComponent(name)}`,
     height: 150,
-    width: 200,
+    width: 250,
     anchorOrigin: {
       horizontal: "CENTER",
       vertical: "TOP",
