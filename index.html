@@ -9,10 +9,9 @@
   <body>
     <!-- Tab headers -->
     <div class="tabs">
-<div class="tab active" data-tab="details-tab" id="details-tab-label">Character's</div>
+      <div class="tab active" data-tab="details-tab" id="details-tab-label">Character's</div>
       <div class="tab" data-tab="main-tab">Settings</div>
       <!-- <div class="tab" data-tab="extras-tab">Extras</div> -->
-      <!-- NEW tab -->
     </div>
 
     <!-- Character Details tab (default active) -->
@@ -22,27 +21,37 @@
 
     <!-- Main tab content -->
     <div id="main-tab" class="tab-content">
-        <div><p><h3>GM Settings</h3></div></p>
-        <div id="settings-content">
-          <label for="openActionSetting">Extension Auto Open:</label>
-          <input type="checkbox" id="openActionSetting" />
+      <div><p><h3>GM Settings</h3></div></p>
+      <div id="settings-content">
+        <label for="openActionSetting">Extension Auto Open:</label>
+        <input type="checkbox" id="openActionSetting" />
 
-          <label for="showInspirationSetting">Show Inspiration:</label>
-          <input type="checkbox" id="showInspirationSetting" />
-                <div class="button"><br><br>
-        </button>
-              </div>
-
-        <label for="detailsTabLabelSetting">Set Group Name Here:<br><br></label>
-        <input type="text" id="detailsTabLabelSetting" placeholder="Character's" />
+        <label for="showInspirationSetting">Show Inspiration:</label>
+        <input type="checkbox" id="showInspirationSetting" />
 <br><br>
-        <button id="usageButton" type="button">Usage Guide</button>
-        </div>
+        <fieldset class="setting-group">
+          <legend class="setting-label">Stat Block Access for</legend>
+          <label>
+            <input type="radio" name="statBlockAccess" value="gmOwner" />
+            GM and Owner
+          </label><br />
+          <label>
+            <input type="radio" name="statBlockAccess" value="all" />
+            All Players
+          </label>
+        </fieldset>
+        <br><br>
+              <label for="detailsTabLabelSetting">Set Group Name Here:<br><br></label>
+      <input type="text" id="detailsTabLabelSetting" placeholder="Character's" />
       </div>
 
-      <!-- Main app logic -->
-      <script type="module" src="/src/js/main.js"></script>
+
+      <br><br>
+      <button id="usageButton" type="button">Usage Guide</button>
     </div>
+
+    <!-- Main app logic -->
+    <script type="module" src="/src/js/main.js"></script>
 
     <!-- New Extras tab -->
     <div id="extras-tab" class="tab-content">

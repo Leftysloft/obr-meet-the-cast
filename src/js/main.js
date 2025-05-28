@@ -269,9 +269,55 @@ async function loadCharacterDetails(charId, data, item) {
 
   charNameEl.style.cursor = "pointer"; // indicate clickable
 
-  charNameEl.onclick = () => {
+  charNameEl.onclick = async () => {
     const modalId = `${ID}/modal/${charId}`;
 
+    // Get current player's ID
+    const playerId = await OBR.player.getId();
+
+    // Get current player's role ("GM" or "Player")
+    const role = await OBR.player.getRole();
+
+    // Get room metadata (includes your settings)
+    const metadata = await OBR.room.getMetadata();
+    const settings = metadata?.[`${ID}/settings`] ?? {};
+
+    // Determine stat block access setting ("gmOwner" or "all")
+    const accessSetting = settings.statBlockAccess ?? "gmOwner";
+
+    // Get the item representing this character to find its owner ID
+    const items = await OBR.scene.items.getItems();
+    const charItem = items.find((item) => {
+      // Assuming character_id stored in metadata matches charId
+      return item.metadata?.[`${ID}/metadata`]?.character_id === charId;
+    });
+
+    if (!charItem) {
+      console.warn("Character item not found.");
+      return;
+    }
+
+    const ownerId = charItem.createdUserId;
+
+    // Check if current player is GM
+    const isGM = role === "GM";
+
+    // Check if current player is the owner of this character
+    const isOwner = playerId === ownerId;
+
+    // Access logic:
+    // If setting is "all" => everyone can view
+    // If setting is "gmOwner" => only GM or owner can view
+    const allowed =
+      accessSetting === "all" ||
+      (accessSetting === "gmOwner" && (isGM || isOwner));
+
+    if (!allowed) {
+      console.warn("Stat block access denied.");
+      return;
+    }
+
+    // If allowed, open the stat block popup
     OBR.popover.open({
       id: modalId,
       url: `/charStats.html?charId=${charId}&name=${encodeURIComponent(
@@ -280,11 +326,7 @@ async function loadCharacterDetails(charId, data, item) {
       width: 450,
       height: 800,
       marginThreshold: 25,
-
-      anchorOrigin: {
-        horizontal: "RIGHT",
-        vertical: "TOP",
-      },
+      anchorOrigin: { horizontal: "RIGHT", vertical: "TOP" },
       transformOrigin: { horizontal: "RIGHT", vertical: "TOP" },
       anchorReference: "ELEMENT",
     });
