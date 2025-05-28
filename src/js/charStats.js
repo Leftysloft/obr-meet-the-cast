@@ -81,9 +81,9 @@ function showRollPopover(label, content, name = "Unknown") {
     hidePaper: true,
   });
 
-  // setTimeout(() => {
-  //   OBR.popover.close(popoverId);
-  // }, 5000);
+  setTimeout(() => {
+    OBR.popover.close(popoverId);
+  }, 5000);
 }
 
 function renderSaveNotes(stats) {
