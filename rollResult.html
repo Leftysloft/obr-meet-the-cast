@@ -1,32 +1,17 @@
-<!-- rollResult.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Roll Result</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: sans-serif;
-        padding: 10px;
-        background: #c15f5f;
-        font-style: italic;
-      }
-      pre {
-        white-space: pre-wrap;
-        font-size: 14px;
-        background: white;
-        padding: 8px;
-        border-radius: 6px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      }
-    </style>
-    <script type="module" src="src/js/rollUtils.js"></script>
+    <link rel="stylesheet" href="/src/css/rollResult.css" />
+    <script type="module" src="/src/js/rollUtils.js"></script>
   </head>
-  <body>
-    <h3 id="name-label"></h3>
-    <pre id="result"></pre>
+  <body class="roll-body">
+    <div class="roll-container">
+      <div id="name-label" class="roll-header"></div>
+      <pre id="result" class="roll-output"></pre>
+    </div>
     <script>
       const params = new URLSearchParams(window.location.search);
       const label = params.get("label") || "Roll";

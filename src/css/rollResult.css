@@ -1,0 +1,41 @@
+/* rollResult.css */
+
+.roll-body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: #01ff0162; /* translucent green */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.roll-container {
+  background-color: #f0fff0;
+  border: 1px solid #90ee90;
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-style: italic;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roll-header {
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.roll-output {
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  white-space: pre-wrap;
+}

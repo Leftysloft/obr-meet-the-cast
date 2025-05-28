@@ -51,9 +51,9 @@ function showRollPopover(label, content) {
     hidePaper: false,
   });
 
-  setTimeout(() => {
-    OBR.popover.close(popoverId);
-  }, 5000);
+  // setTimeout(() => {
+  //   OBR.popover.close(popoverId);
+  // }, 5000);
 }
 
 OBR.onReady(async () => {
