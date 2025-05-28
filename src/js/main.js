@@ -32,7 +32,7 @@ function showRollPopover(label, content, name = "Unknown") {
     id: popoverId,
     url: `/rollResult.html?label=${encodeURIComponent(
       label
-    )}&content=${encodeURIComponent(content)}`,
+    )}&content=${encodeURIComponent(content)}&name=${encodeURIComponent(name)}`,
     height: 150,
     width: 250,
     anchorOrigin: {
