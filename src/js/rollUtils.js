@@ -11,8 +11,8 @@ export function rollStat(label, mod) {
     d20,
     modifier: mod,
     total,
-    display: `${label} Roll:\n🎲 d20: ${d20}\nModifier: ${formatBonus(
+    display: `🎲 d20: <strong>${d20}</strong><br>Modifier: <strong>${formatBonus(
       mod
-    )}\nTotal: ${total}`,
+    )}</strong><br><strong style="font-size: 1.2em;">Total: ${total}</strong>`,
   };
 }

@@ -18,8 +18,10 @@
       const content = params.get("content") || "No result";
       const name = params.get("name") || "Unknown";
 
-      document.getElementById("name-label").textContent = `${name} - ${label}`;
-      document.getElementById("result").textContent = content;
+      document.getElementById(
+        "name-label"
+      ).innerHTML = `<div>${name}</div><div>${label}</div>`;
+      document.getElementById("result").innerHTML = content;
     </script>
   </body>
 </html>

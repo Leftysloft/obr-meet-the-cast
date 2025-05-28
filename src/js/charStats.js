@@ -5,6 +5,15 @@ import { rollStat, formatBonus } from "./rollUtils.js"; // ✅ Import both
 
 let charName = "Unknown";
 
+const fullAbilityNames = {
+  str: "Strength",
+  dex: "Dexterity",
+  con: "Constitution",
+  int: "Intelligence",
+  wis: "Wisdom",
+  cha: "Charisma",
+};
+
 // Get query param
 function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
@@ -36,7 +45,7 @@ function renderSavingThrows(stats, name) {
     `;
 
     box.addEventListener("click", () => {
-      const result = rollStat(`${abbr.toUpperCase()} Save`, data.save);
+      const result = rollStat(`${fullAbilityNames[abbr]} Save`, data.save);
 
       showRollPopover(result.label, result.display, name);
 
@@ -139,7 +148,7 @@ function renderAbilities(stats, name) {
     `;
 
     box.addEventListener("click", () => {
-      const result = rollStat(abbr.toUpperCase(), data.modifier);
+      const result = rollStat(`${fullAbilityNames[abbr]} Check`, data.modifier);
 
       showRollPopover(result.label, result.display, name);
 
