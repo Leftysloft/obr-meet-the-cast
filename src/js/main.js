@@ -35,20 +35,11 @@ function showRollPopover(label, content) {
     )}&content=${encodeURIComponent(content)}`,
     height: 150,
     width: 250,
-    anchorPosition: {
-      top: 300,
-      left: 500,
-    },
-    anchorReference: "POSITION",
     anchorOrigin: {
       horizontal: "CENTER",
       vertical: "TOP",
     },
-    transformOrigin: {
-      horizontal: "CENTER",
-      vertical: "TOP",
-    },
-    hidePaper: false,
+    hidePaper: true,
   });
 
   setTimeout(() => {
