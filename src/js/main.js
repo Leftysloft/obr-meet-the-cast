@@ -25,7 +25,7 @@ async function fetchInitialSettings() {
   updateInspirationVisibility(settings.showInspiration ?? true);
 }
 
-function showRollPopover(label, content) {
+function showRollPopover(label, content, name = "Unknown") {
   const popoverId = `roll-result-${Date.now()}`;
 
   OBR.popover.open({
