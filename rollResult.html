@@ -22,6 +22,11 @@
         "name-label"
       ).innerHTML = `<div>${name}</div><div>${label}</div>`;
       document.getElementById("result").innerHTML = content;
+
+      // Trigger fizzle-out at 4 seconds, popover closes at 5
+      setTimeout(() => {
+        document.body.classList.add("fizzle-out");
+      }, 3500);
     </script>
   </body>
 </html>

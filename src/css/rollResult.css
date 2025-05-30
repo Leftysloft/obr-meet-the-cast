@@ -40,3 +40,22 @@
   white-space: pre-wrap;
   margin: 0px;
 }
+
+@keyframes fizzle {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+    mask-image: radial-gradient(circle, white 100%, black 100%);
+    -webkit-mask-image: radial-gradient(circle, white 100%, black 100%);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(6px);
+    mask-image: radial-gradient(circle, transparent 60%, black 100%);
+    -webkit-mask-image: radial-gradient(circle, transparent 60%, black 100%);
+  }
+}
+
+.roll-body.fizzle-out {
+  animation: fizzle 1.2s forwards ease-in;
+}

@@ -44,7 +44,7 @@ function showRollPopover(label, content, name = "Unknown") {
 
   setTimeout(() => {
     OBR.popover.close(popoverId);
-  }, 5000);
+  }, 4000);
 }
 
 OBR.onReady(async () => {
