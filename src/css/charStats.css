@@ -156,3 +156,32 @@ hr {
   margin: 0.5rem 0;
   /* padding: 0.1em; */
 }
+
+.context-menu {
+  position: absolute;
+  background-color: #2b2b2b;
+  border: 1px solid #555;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  padding: 4px 0;
+  min-width: 160px;
+  z-index: 1000;
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  opacity: 1; /* Ensure it's fully visible */
+  color: white;
+}
+
+.context-item {
+  padding: 10px 16px;
+  background-color: transparent;
+  color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.context-item:hover {
+  background-color: #444;
+  color: #ffd700;
+}

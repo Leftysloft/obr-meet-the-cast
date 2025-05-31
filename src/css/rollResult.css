@@ -1,14 +1,31 @@
 /* rollResult.css */
 
-.roll-body {
+html,
+body {
+  height: 100%; /* ensure full viewport height */
   margin: 0;
   padding: 0;
+  overflow: hidden; /* prevent body scroll */
+}
+
+.roll-body {
   font-family: sans-serif;
   background-color: #01ff0162; /* translucent green */
+
+  /* take full viewport height */
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+
+  /* let container grow naturally */
+  overflow: visible;
+  position: fixed; /* overlay */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
 }
 
 .roll-container {
@@ -16,10 +33,17 @@
   border: 1px solid #90ee90;
   border-radius: 12px;
   padding: 12px;
-  max-width: 90%;
+  max-width: 90vw; /* relative to viewport */
+
+  /* remove any height limits */
+  height: auto;
+  max-height: none;
+  overflow: visible;
+
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   font-style: italic;
   color: black;
+
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -38,7 +62,8 @@
   font-size: 0.9rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   white-space: pre-wrap;
-  margin: 0px;
+  margin: 0;
+  overflow-wrap: break-word; /* break long words */
 }
 
 @keyframes fizzle {

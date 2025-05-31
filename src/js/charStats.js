@@ -1,7 +1,6 @@
-// charStats.js
 import OBR from "@owlbear-rodeo/sdk";
 import { fetchCharacterData } from "./characterData.js";
-import { rollStat, formatBonus } from "./rollUtils.js"; // ✅ Import both
+import { rollStat, formatBonus, showRollModeMenu } from "./rollUtils.js";
 
 let charName = "Unknown";
 
@@ -14,7 +13,6 @@ const fullAbilityNames = {
   cha: "Charisma",
 };
 
-// Get query param
 function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
   return params.get(name);
@@ -58,6 +56,26 @@ function renderSavingThrows(stats, name) {
       } else {
         console.warn("OBR.broadcast.sendMessage is not available");
       }
+    });
+
+    box.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      showRollModeMenu(e.clientX, e.clientY, (mode) => {
+        const label = `${fullAbilityNames[abbr]} Save${
+          mode !== "normal" ? ` (${mode})` : ""
+        }`;
+        const result = rollStat(label, data.save, mode);
+
+        showRollPopover(result.label, result.display, name);
+
+        if (OBR.broadcast?.sendMessage) {
+          OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
+            label: result.label,
+            content: result.display,
+            name: name,
+          });
+        }
+      });
     });
 
     saveDiv.appendChild(box);
@@ -154,11 +172,30 @@ function renderAbilities(stats, name) {
       }
     });
 
+    box.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      showRollModeMenu(e.clientX, e.clientY, (mode) => {
+        const label = `${fullAbilityNames[abbr]} Check${
+          mode !== "normal" ? ` (${mode})` : ""
+        }`;
+        const result = rollStat(label, data.modifier, mode);
+
+        showRollPopover(result.label, result.display, name);
+
+        if (OBR.broadcast?.sendMessage) {
+          OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
+            label: result.label,
+            content: result.display,
+            name: name,
+          });
+        }
+      });
+    });
+
     abilitiesDiv.appendChild(box);
   }
 }
 
-// Use OBR.onReady to ensure SDK is fully loaded before accessing OBR.broadcast
 OBR.onReady(async () => {
   const nameFromParams = getQueryParam("name") || "Unknown";
   charName = nameFromParams;
