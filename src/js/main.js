@@ -98,9 +98,9 @@ OBR.onReady(async () => {
   });
 
   // If scene is already ready when we get here, initialize immediately
-  if (OBR.scene.isReady()) {
-    await initialize();
-  }
+  // if (OBR.scene.isReady()) {
+  //   await initialize();
+  // }
 
   // Set up broadcast listener as before
   if (OBR.broadcast?.onMessage) {
