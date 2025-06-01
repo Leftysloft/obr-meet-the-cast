@@ -1,209 +1,22 @@
 import OBR from "@owlbear-rodeo/sdk";
 import { fetchCharacterData } from "./characterData.js";
-import { rollStat, formatBonus, showRollModeMenu } from "./rollUtils.js";
-
-let charName = "Unknown";
-
-const fullAbilityNames = {
-  str: "Strength",
-  dex: "Dexterity",
-  con: "Constitution",
-  int: "Intelligence",
-  wis: "Wisdom",
-  cha: "Charisma",
-};
+import {
+  renderAbilities,
+  renderSavingThrows,
+  renderSaveNotes,
+} from "./renderStats.js";
 
 function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
   return params.get(name);
 }
 
-function renderSavingThrows(stats, name) {
-  const saveDiv = document.getElementById("savingThrows");
-  saveDiv.innerHTML = "";
-
-  const saveOrder = ["str", "dex", "con", "int", "wis", "cha"];
-
-  for (const abbr of saveOrder) {
-    const data = stats[abbr];
-    const box = document.createElement("div");
-    box.className = "stat-box";
-    box.title = `Click to roll ${abbr.toUpperCase()} Save`;
-
-    const profStar = data.saveProficiency
-      ? `<span class="prof-star">🟊</span>`
-      : "";
-
-    box.innerHTML = `
-      <div class="score">
-        ${data.score} ${profStar}
-      </div>
-      <div class="mod">${formatBonus(data.save)}</div>
-      <div class="label">${abbr.toUpperCase()} Save</div>
-    `;
-
-    box.addEventListener("click", () => {
-      const result = rollStat(`${fullAbilityNames[abbr]} Save`, data.save);
-
-      showRollPopover(result.label, result.display, name);
-
-      if (OBR.broadcast?.sendMessage) {
-        OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
-          label: result.label,
-          content: result.display,
-          name: name,
-        });
-      } else {
-        console.warn("OBR.broadcast.sendMessage is not available");
-      }
-    });
-
-    box.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      showRollModeMenu(e.clientX, e.clientY, (mode) => {
-        const label = `${fullAbilityNames[abbr]} Save${
-          mode !== "normal" ? ` (${mode})` : ""
-        }`;
-        const result = rollStat(label, data.save, mode);
-
-        showRollPopover(result.label, result.display, name);
-
-        if (OBR.broadcast?.sendMessage) {
-          OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
-            label: result.label,
-            content: result.display,
-            name: name,
-          });
-        }
-      });
-    });
-
-    saveDiv.appendChild(box);
-  }
-}
-
-function showRollPopover(label, content, name = "Unknown") {
-  const popoverId = `roll-result-${Date.now()}`;
-
-  OBR.popover.open({
-    id: popoverId,
-    url: `/rollResult.html?label=${encodeURIComponent(
-      label
-    )}&content=${encodeURIComponent(content)}&name=${encodeURIComponent(name)}`,
-    height: 150,
-    width: 250,
-    anchorOrigin: {
-      horizontal: "CENTER",
-      vertical: "TOP",
-    },
-    hidePaper: true,
-  });
-
-  setTimeout(() => {
-    OBR.popover.close(popoverId);
-  }, 4000);
-}
-
-function renderSaveNotes(stats) {
-  const notesDiv = document.querySelector(".notes");
-  notesDiv.innerHTML = "";
-
-  const abilityLabels = {
-    str: "STR",
-    dex: "DEX",
-    con: "CON",
-    int: "INT",
-    wis: "WIS",
-    cha: "CHA",
-  };
-
-  for (const [abbr, data] of Object.entries(stats)) {
-    if (data.saveAdv?.length) {
-      for (const adv of data.saveAdv) {
-        const restriction = adv.restriction ? ` ${adv.restriction}` : "";
-        const note = document.createElement("p");
-        note.textContent = `🛡️ Advantage on ${abilityLabels[abbr]} saves${restriction}`;
-        notesDiv.appendChild(note);
-      }
-    }
-
-    if (data.saveDis?.length) {
-      for (const dis of data.saveDis) {
-        const restriction = dis.restriction ? ` ${dis.restriction}` : "";
-        const note = document.createElement("p");
-        note.textContent = `⚠️ Disadvantage on ${abilityLabels[abbr]} saves${restriction}`;
-        notesDiv.appendChild(note);
-      }
-    }
-  }
-}
-
-function renderAbilities(stats, name) {
-  const abilitiesDiv = document.getElementById("abilities");
-  abilitiesDiv.innerHTML = "";
-
-  const abilityOrder = ["str", "dex", "con", "int", "wis", "cha"];
-
-  for (const abbr of abilityOrder) {
-    const data = stats[abbr];
-    const box = document.createElement("div");
-    box.className = "stat-box";
-    box.title = `Click to roll ${abbr.toUpperCase()}`;
-
-    box.innerHTML = `
-      <div class="score">${data.score}</div>
-      <div class="mod">${formatBonus(data.modifier)}</div>
-      <div class="label">${abbr.toUpperCase()}</div>
-    `;
-
-    box.addEventListener("click", () => {
-      const result = rollStat(`${fullAbilityNames[abbr]} Check`, data.modifier);
-
-      showRollPopover(result.label, result.display, name);
-
-      if (OBR.broadcast?.sendMessage) {
-        OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
-          label: result.label,
-          content: result.display,
-          name: name,
-        });
-      } else {
-        console.warn("OBR.broadcast.sendMessage is not available");
-      }
-    });
-
-    box.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      showRollModeMenu(e.clientX, e.clientY, (mode) => {
-        const label = `${fullAbilityNames[abbr]} Check${
-          mode !== "normal" ? ` (${mode})` : ""
-        }`;
-        const result = rollStat(label, data.modifier, mode);
-
-        showRollPopover(result.label, result.display, name);
-
-        if (OBR.broadcast?.sendMessage) {
-          OBR.broadcast.sendMessage("rodeo.owlbear.charStats.rollResult", {
-            label: result.label,
-            content: result.display,
-            name: name,
-          });
-        }
-      });
-    });
-
-    abilitiesDiv.appendChild(box);
-  }
-}
-
 OBR.onReady(async () => {
-  const nameFromParams = getQueryParam("name") || "Unknown";
-  charName = nameFromParams;
-
+  const charName = getQueryParam("name") || "Unknown";
   const charId = getQueryParam("charId");
   const modalId = getQueryParam("modalId");
 
-  document.getElementById("char-name").textContent = nameFromParams;
+  document.getElementById("char-name").textContent = charName;
   document.getElementById("stats").textContent = charId
     ? `Character ID: ${charId}`
     : "No Character ID";
@@ -224,8 +37,8 @@ OBR.onReady(async () => {
       return;
     }
 
-    renderAbilities(data.stats, nameFromParams);
-    renderSavingThrows(data.stats, nameFromParams);
+    renderAbilities(data.stats, charName);
+    renderSavingThrows(data.stats, charName);
     renderSaveNotes(data.stats);
 
     document.getElementById("stats").style.display = "none";

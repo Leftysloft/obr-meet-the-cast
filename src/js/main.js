@@ -48,8 +48,7 @@ function showRollPopover(label, content, name = "Unknown") {
 }
 
 OBR.onReady(async () => {
-  OBR.scene.onReadyChange(async (ready) => {
-    // if (ready) {  //added after chat-stats-popover
+  async function initialize() {
     await fetchInitialSettings();
 
     OBR.room.onMetadataChange((metadata) => {
@@ -71,37 +70,39 @@ OBR.onReady(async () => {
       );
     };
 
-    OBR.scene.items.getItems().then((items) => {
-      handleSceneItems(items);
-    });
+    const items = await OBR.scene.items.getItems();
+    handleSceneItems(items);
 
     OBR.scene.items.onChange((items) => {
-      // console.log("Scene items changed or loaded:", items);
       handleSceneItems(items);
     });
 
-    OBR.room
-      .getMetadata()
-      .then((metadata) => {
-        if (metadata?.[`${ID}/settings`]?.openActionEnabled) {
-          OBR.action.open();
-        }
-      })
-      .catch((error) => {
-        console.error("Error retrieving metadata. Check path.:", error);
-      });
+    try {
+      const metadata = await OBR.room.getMetadata();
+      if (metadata?.[`${ID}/settings`]?.openActionEnabled) {
+        OBR.action.open();
+      }
+    } catch (error) {
+      console.error("Error retrieving metadata. Check path.:", error);
+    }
 
     setupContextMenu();
-    // setupSheetList(document.querySelector("#sheet-list"));
     setupSettings();
-    const extrasContainer = document.getElementById("extras-container");
-    // OBR.scene.items.onChange(() => {
-    //   setupLightSheetList(document.getElementById("extras-container"));
-    // });
-    // setupLightSheetList(extrasContainer);
-    // }
+  }
+
+  // Listen for scene ready state changes
+  OBR.scene.onReadyChange(async (ready) => {
+    if (ready) {
+      await initialize();
+    }
   });
-  // console.log("connected ID", OBR.player.getId());
+
+  // If scene is already ready when we get here, initialize immediately
+  if (OBR.scene.isReady()) {
+    await initialize();
+  }
+
+  // Set up broadcast listener as before
   if (OBR.broadcast?.onMessage) {
     OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
       const { label, content, name } = event.data;
