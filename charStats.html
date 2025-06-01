@@ -1,33 +1,138 @@
+<!-- charStats.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Character Stats</title>
-    <!-- <link rel="stylesheet" href="src/css/style.css" /> -->
     <link rel="stylesheet" href="src/css/charStats.css" />
+    <style>
+      .tab-buttons {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .tab-button {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        border: none;
+        background: #eee;
+        font-weight: bold;
+      }
+
+      .tab-button.active {
+        background: #ccc;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+    </style>
   </head>
+
   <body>
     <div class="character-card">
-      <div id="char-name" class="char-name">Character Name</div>
-      <div id="stats">Loading stats...</div>
-      <div class="stat-block">
-        <h3>Ability Checks</h3>
-        <!-- Ability Scores -->
-        <div class="abilities" id="abilities"></div>
-
-        <hr />
-
-        <!-- Saving Throws -->
-        <div class="section">
-          <h3>Saving Throws (🟊 = Proficient)</h3>
-          <div class="saving-throws" id="savingThrows"></div>
-          <div class="notes"></div>
-        </div>
-
-        <hr />
+      <div class="tab-buttons">
+        <button class="tab-button active" data-tab="tab1">Stats</button>
+        <button class="tab-button" data-tab="tab2">Skills</button>
       </div>
+
+      <!-- Tab 1: Stats -->
+      <div id="tab1" class="tab-content active">
+        <div id="char-name" class="char-name">Character Name</div>
+        <div id="stats">Loading stats...</div>
+
+        <div class="stat-block">
+          <h3>Ability Checks</h3>
+          <div class="abilities" id="abilities"></div>
+
+          <hr />
+
+          <div class="section">
+            <h3>Saving Throws (🟊 = Proficient)</h3>
+            <div class="saving-throws" id="savingThrows"></div>
+            <div class="notes"></div>
+          </div>
+
+          <hr />
+        </div>
+      </div>
+
+      <!-- Tab 2: Skills -->
+      <div id="tab2" class="tab-content">
+        <!-- <h2>Skills</h2> -->
+        <div id="char-name" class="char-name">Character Name</div>
+        <div id="skills" class="skills-container">
+          <div class="skill-group">
+            <h4>Physical Skills</h4>
+            <div class="skills-grid">
+              <div class="skill-entry">
+                <span>Athletics</span>
+                <span>+3</span>
+              </div>
+              <div class="skill-entry">
+                <span>Acrobatics</span>
+                <span>+2</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h4>Mental Skills</h4>
+            <div class="skills-grid">
+              <div class="skill-entry">
+                <span>Arcana</span>
+                <span>+4</span>
+              </div>
+              <div class="skill-entry">
+                <span>Investigation</span>
+                <span>+5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <button id="closeBtn">Close</button>
     </div>
+
+    <!-- Module scripts -->
     <script type="module" src="src/js/charStats.js"></script>
+    <script type="module">
+      import { renderSkills } from "./src/js/charSkills.js";
+
+      // Dynamically get the character ID from URL params:
+      const params = new URLSearchParams(window.location.search);
+      const characterId = params.get("charId");
+
+      if (!characterId) {
+        console.warn("No character ID found in URL params.");
+      }
+
+      // Tabs logic
+      const tabButtons = document.querySelectorAll(".tab-button");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const tabId = btn.getAttribute("data-tab");
+
+          tabButtons.forEach((b) => b.classList.remove("active"));
+          tabContents.forEach((c) => c.classList.remove("active"));
+
+          btn.classList.add("active");
+          document.getElementById(tabId).classList.add("active");
+
+          if (tabId === "tab2" && characterId) {
+            renderSkills(characterId);
+          }
+        });
+      });
+    </script>
   </body>
 </html>
+x

@@ -36,7 +36,7 @@ h3 {
 
 .stat-block {
   background-color: #1f1f1f;
-  color: white;
+  color: var(--color-primary, #007bff);
   padding: 0.8rem;
   border-radius: 12px;
   margin-top: 0px;
@@ -184,4 +184,56 @@ hr {
 .context-item:hover {
   background-color: #444;
   color: #ffd700;
+}
+
+/* New container for skill groups */
+.skills-container {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr); /* 2 skill groups per row */
+  gap: 1rem;
+}
+
+.skill-group {
+  margin-bottom: 0.5rem;
+  background: #1f1f1f;
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  border-radius: 8px;
+  color: #000;
+}
+
+.skill-group > h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--color-primary, #007bff);
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 2 stat boxes per skill group row */
+  gap: 0.5rem 1rem;
+}
+
+.skill-entry {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+}
+
+.skill-box {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  padding: 0.25rem;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+  border: 1px solid #444;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+.skill-box:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
 }

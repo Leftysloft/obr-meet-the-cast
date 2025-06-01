@@ -1,3 +1,5 @@
+//charStats.js
+
 import OBR from "@owlbear-rodeo/sdk";
 import { fetchCharacterData } from "./characterData.js";
 import {

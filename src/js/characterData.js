@@ -5,8 +5,8 @@ export async function fetchCharacterData(charId) {
   // console.log("Calling fetchCharacterData for", charId);
 
   //change this line only for python server!
-  // const url = `http://127.0.0.1:5000/api/character/${charId}`;
-  const url = `https://lefty469.pythonanywhere.com/api/character/${charId}`;
+  const url = `http://127.0.0.1:5000/api/character/${charId}`;
+  // const url = `https://lefty469.pythonanywhere.com/api/character/${charId}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
