@@ -113,7 +113,8 @@ OBR.onReady(async () => {
   }
 });
 
-function handleSceneItems(items) {
+async function handleSceneItems(items) {
+  console.log("Handling scene items:", items); //Debug not loading error with no console errors
   const charItems = items.filter(
     (item) => item.metadata?.[`${ID}/metadata`]?.character_id
   );
@@ -128,6 +129,8 @@ function handleSceneItems(items) {
 
     // Always fetch and reload if item metadata may have changed
     fetchCharacterData(charId).then(async (data) => {
+      console.log("Fetched character data for", charId, data); //debug load failure with no error in console.
+
       const freshItems = await OBR.scene.items.getItems();
       const freshItem = freshItems.find((i) => i.id === item.id);
       if (data && freshItem) {
@@ -414,6 +417,7 @@ async function loadCharacterDetails(charId, data, item) {
   }
 
   lastCharacterData[charId] = { ...data };
+  lastCharacterData[charId] = data;
 }
 
 function smoothTransitionHealthBar(healthBarFill, targetPercentage) {
