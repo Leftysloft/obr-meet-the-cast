@@ -61,15 +61,47 @@ export async function renderSkills(charId) {
     groupDiv.appendChild(skillsGrid);
 
     for (const skill of skills) {
-      const modifier = charData.skills[skill];
-      if (modifier === undefined) continue;
+      const skillData = charData.skills[skill];
+      if (!skillData) continue;
+
+      const { modifier, adv, dis, prof = 1 } = skillData;
 
       const box = document.createElement("div");
       box.className = "skill-box";
+
+      if (adv) {
+        box.classList.add("advantage");
+      } else if (dis) {
+        box.classList.add("disadvantage");
+      }
+
       box.title = `Click to roll ${prettyNames[skill]}`;
 
+      // Create proficiency circle
+      const profCircle = document.createElement("div");
+      profCircle.classList.add("prof-circle");
+      switch (prof) {
+        case 2:
+          profCircle.classList.add("prof-half");
+          break;
+        case 3:
+          profCircle.classList.add("prof-full");
+          break;
+        case 4:
+          profCircle.classList.add("prof-expert");
+          break;
+        default:
+          profCircle.classList.add("prof-none");
+      }
+
+      // Build the box content
       box.innerHTML = `
-        <div class="score">${modifier >= 0 ? "+" : ""}${modifier}</div>
+        <div class="score-wrapper">
+          ${profCircle.outerHTML}
+          <div class="score">
+            ${modifier >= 0 ? "+" : ""}${modifier}
+          </div>
+        </div>
         <div class="label">${prettyNames[skill]}</div>
       `;
 

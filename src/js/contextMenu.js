@@ -12,7 +12,7 @@ export async function setupContextMenu() {
     icons: [
       {
         icon: "/fa-circle-check.svg",
-        label: "Add To Character Sheet",
+        label: "Add To Meet-The-Cast",
         filter: {
           every: [
             { key: "layer", value: "CHARACTER" },
@@ -22,7 +22,7 @@ export async function setupContextMenu() {
       },
       {
         icon: "/fa-circle-xmark.svg",
-        label: "Remove From Character Sheet",
+        label: "Remove From Meet-The-Cast",
         filter: {
           every: [{ key: "layer", value: "CHARACTER" }],
         },

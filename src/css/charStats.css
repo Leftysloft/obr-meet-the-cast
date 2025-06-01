@@ -236,3 +236,69 @@ hr {
   transform: scale(1.03);
   box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
 }
+
+.skill-box.advantage {
+  border-color: #3cb371; /* MediumSeaGreen */
+  box-shadow: 0 0 10px #3cb371aa; /* subtle green glow */
+  background: linear-gradient(
+    145deg,
+    #2f4f2f,
+    #1a2a1a
+  ); /* slightly greenish dark bg */
+}
+
+.skill-box.disadvantage {
+  border-color: #dc143c; /* Crimson red */
+  box-shadow: 0 0 10px #dc143caa; /* subtle red glow */
+  background: linear-gradient(
+    145deg,
+    #4f2f2f,
+    #2a1a1a
+  ); /* slightly reddish dark bg */
+}
+
+.score-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.prof-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid #aaaaaa;
+  position: relative;
+  display: inline-block;
+}
+
+.prof-none {
+  background: transparent;
+}
+
+.prof-half {
+  background: linear-gradient(135deg, #f6c90e 50%, transparent 50%);
+}
+
+.prof-full {
+  background-color: #f6c90e;
+}
+
+.prof-expert {
+  background-color: transparent; /* outer ring only */
+  border: 2px solid #f6c90e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px; /* ensures space for inner circle */
+}
+
+.prof-expert::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background-color: #f6c90e;
+  border-radius: 50%;
+  display: block;
+}
