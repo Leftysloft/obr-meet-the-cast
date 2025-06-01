@@ -190,7 +190,6 @@ hr {
 .skills-container {
   display: grid;
   grid-template-columns: repeat(1, 1fr); /* 2 skill groups per row */
-  gap: 1rem;
 }
 
 .skill-group {
