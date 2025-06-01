@@ -1,3 +1,4 @@
+import OBR from "@owlbear-rodeo/sdk";
 import { rollStat, formatBonus, showRollModeMenu } from "./rollUtils.js";
 import { showRollPopover } from "./popoverUtils.js";
 
