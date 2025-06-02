@@ -10,7 +10,7 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         charStats: resolve(__dirname, "charStats.html"),
         rollUtils: resolve(__dirname, "rollResult.html"),
-        charSkills: resolve(__dirname, "charStats.html"),
+        // charSkills: resolve(__dirname, "charStats.html"),
       },
     },
   },
