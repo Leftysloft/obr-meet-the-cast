@@ -1,4 +1,3 @@
-//main.js
 import "../css/style.css";
 import OBR from "@owlbear-rodeo/sdk";
 import { setupContextMenu } from "./contextMenu.js";
@@ -6,10 +5,10 @@ import { setupSettings } from "./settings/settings.js";
 import { ID } from "./constants.js";
 import { fetchCharacterData } from "./characterData.js";
 import { loadCharacterDetails } from "./characterDetails.js";
+import { setupRollBroadcastListeners } from "./rollBroadcast.js";
 
 let pollingIntervals = {};
 let lastCharacterData = {};
-let characterWindow = null;
 let showInspiration = true;
 
 function updateInspirationVisibility(enabled) {
@@ -28,25 +27,6 @@ async function fetchInitialSettings() {
   if (labelEl && settings.detailsTabLabel) {
     labelEl.textContent = settings.detailsTabLabel;
   }
-}
-
-function showRollPopover(label, content, name = "Unknown") {
-  const popoverId = `roll-result-${Date.now()}`;
-
-  OBR.popover.open({
-    id: popoverId,
-    url: `/rollResult.html?label=${encodeURIComponent(
-      label
-    )}&content=${encodeURIComponent(content)}&name=${encodeURIComponent(name)}`,
-    height: 150,
-    width: 250,
-    anchorOrigin: { horizontal: "CENTER", vertical: "TOP" },
-    hidePaper: true,
-  });
-
-  setTimeout(() => {
-    OBR.popover.close(popoverId);
-  }, 4000);
 }
 
 OBR.onReady(async () => {
@@ -102,23 +82,7 @@ OBR.onReady(async () => {
     }
   });
 
-  const handleRollResult = (event) => {
-    const { label, content, name } = event.data;
-    showRollPopover(label, content, name);
-  };
-
-  if (OBR.broadcast?.onMessage) {
-    OBR.broadcast.onMessage(
-      "rodeo.owlbear.charStats.rollResult",
-      handleRollResult
-    );
-    OBR.broadcast.onMessage(
-      "rodeo.owlbear.charSkills.rollResult",
-      handleRollResult
-    );
-  } else {
-    console.warn("Broadcast listener unavailable");
-  }
+  setupRollBroadcastListeners();
 });
 
 async function handleSceneItems(items) {
