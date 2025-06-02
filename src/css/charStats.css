@@ -41,6 +41,7 @@ h3 {
   background: #1f1f1f;
   border: 1px solid #ddd;
   padding: 0.75rem;
+  padding-top: 0.25rem;
   border-radius: 8px;
   color: var(--color-primary, #007bff);
   font-family: monospace;
@@ -125,7 +126,7 @@ h3 {
 }
 
 .score {
-  font-size: 1.75rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #f6c90e;
 }
@@ -140,7 +141,7 @@ h3 {
   font-size: 0.85rem;
   color: #aaa;
   /* text-transform: uppercase; */
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   letter-spacing: 0.5px;
 }
 
@@ -214,11 +215,13 @@ hr {
   border-radius: 8px;
   color: #000;
   font-family: monospace;
+  margin-top: 0rem;
+  padding-top: 0.25rem;
 }
 
 .skill-group > h3 {
   margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0rem;
   font-weight: bold;
   color: var(--color-primary, #007bff);
 }
