@@ -1,52 +1,24 @@
-<!-- charStats.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Character Stats</title>
     <link rel="stylesheet" href="src/css/charStats.css" />
-    <style>
-      .tab-buttons {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-      }
-
-      .tab-button {
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        border: none;
-        background: #eee;
-        font-weight: bold;
-      }
-
-      .tab-button.active {
-        background: #ccc;
-      }
-
-      .tab-content {
-        display: none;
-      }
-
-      .tab-content.active {
-        display: block;
-      }
-    </style>
   </head>
 
   <body>
     <div class="character-card">
+      <!-- Character Name -->
+      <div id="char-name" class="char-name">Character Name</div>
+
       <div class="tab-buttons">
         <button class="tab-button active" data-tab="tab1">Stats</button>
         <button class="tab-button" data-tab="tab2">Skills</button>
-        <!--  -->
         <button id="closeBtn">Close</button>
-        <!--  -->
       </div>
 
-      <!-- Tab 1: Stats -->
+      <!-- Stats Tab -->
       <div id="tab1" class="tab-content active">
-        <div id="char-name" class="char-name">Character Name</div>
         <div id="stats">Loading stats...</div>
 
         <div class="stat-block">
@@ -69,15 +41,12 @@
               <div>Passive Investigation: 11</div>
               <div>Passive Insight: 12</div>
             </div>
-            <!-- <div class="darkvision">Darkvision 60 ft.</div> -->
           </div>
         </div>
       </div>
 
-      <!-- Tab 2: Skills -->
+      <!-- Skills Tab -->
       <div id="tab2" class="tab-content">
-        <!-- <h2>Skills</h2> -->
-        <div id="char-name" class="char-name">Character Name</div>
         <div id="skills" class="skills-container">
           <div class="skill-group">
             <h3>Physical Skills</h3>
@@ -108,16 +77,12 @@
           </div>
         </div>
       </div>
-
-      <!-- <button id="closeBtn">Close</button> -->
     </div>
 
-    <!-- Module scripts -->
     <script type="module" src="src/js/charStats.js"></script>
     <script type="module">
       import { renderSkills } from "./src/js/charSkills.js";
 
-      // Dynamically get the character ID from URL params:
       const params = new URLSearchParams(window.location.search);
       const characterId = params.get("charId");
 
@@ -125,7 +90,6 @@
         console.warn("No character ID found in URL params.");
       }
 
-      // Tabs logic
       const tabButtons = document.querySelectorAll(".tab-button");
       const tabContents = document.querySelectorAll(".tab-content");
 
