@@ -79,6 +79,11 @@ export async function renderSkills(charId) {
 
         const profCircle = document.createElement("div");
         profCircle.classList.add("prof-circle");
+        console.log(
+          "Athletics proficiency level:",
+          charData.skills.athletics.prof
+        );
+
         switch (prof) {
           case 2:
             profCircle.classList.add("prof-half");
