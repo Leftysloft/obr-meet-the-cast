@@ -286,6 +286,7 @@ hr {
   padding-left: 0.25rem;
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
 }
 
 .prof-circle {
@@ -310,18 +311,17 @@ hr {
 }
 
 .prof-expert {
-  background-color: transparent;
-  border: 2px solid #f6c90e;
-  display: inline-block; /* changed from flex */
-  padding: 0; /* removes spacing that causes wrapping */
-  position: relative; /* needed for centering ::after */
+  background-color: #f6c90e; /* fill like prof-full */
+  border: 2px solid #f6c90e; /* thicker gold ring */
+  position: relative;
 }
-
 .prof-expert::after {
   content: "";
-  width: 6px;
-  height: 6px;
-  background-color: #f6c90e;
+  position: absolute;
+  top: -4.5px;
+  left: -4.5px;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #f6c90e;
   border-radius: 50%;
-  display: block;
 }
