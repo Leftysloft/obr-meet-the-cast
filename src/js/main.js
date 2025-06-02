@@ -102,15 +102,20 @@ OBR.onReady(async () => {
     }
   });
 
+  const handleRollResult = (event) => {
+    const { label, content, name } = event.data;
+    showRollPopover(label, content, name);
+  };
+
   if (OBR.broadcast?.onMessage) {
-    OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
-      const { label, content, name } = event.data;
-      showRollPopover(label, content, name);
-    });
-    OBR.broadcast.onMessage("rodeo.owlbear.charSkills.rollResult", (event) => {
-      const { label, content, name } = event.data;
-      showRollPopover(label, content, name);
-    });
+    OBR.broadcast.onMessage(
+      "rodeo.owlbear.charStats.rollResult",
+      handleRollResult
+    );
+    OBR.broadcast.onMessage(
+      "rodeo.owlbear.charSkills.rollResult",
+      handleRollResult
+    );
   } else {
     console.warn("Broadcast listener unavailable");
   }
