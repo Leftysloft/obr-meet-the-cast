@@ -1,3 +1,4 @@
+// renderStats.js
 import OBR from "@owlbear-rodeo/sdk";
 import { rollStat, formatBonus, showRollModeMenu } from "./rollUtils.js";
 import { showRollPopover } from "./popoverUtils.js";
@@ -10,6 +11,17 @@ const fullAbilityNames = {
   wis: "Wisdom",
   cha: "Charisma",
 };
+
+// 🆕 Centralized roll + broadcast logic
+function broadcastRoll(label, value, mode = "normal", name) {
+  const result = rollStat(label, value, mode);
+  showRollPopover(result.label, result.display, name);
+  OBR.broadcast?.sendMessage?.("rodeo.owlbear.charStats.rollResult", {
+    label: result.label,
+    content: result.display,
+    name,
+  });
+}
 
 export function renderSavingThrows(stats, name) {
   const saveDiv = document.getElementById("savingThrows");
@@ -34,13 +46,8 @@ export function renderSavingThrows(stats, name) {
     `;
 
     box.addEventListener("click", () => {
-      const result = rollStat(`${fullAbilityNames[abbr]} Save`, data.save);
-      showRollPopover(result.label, result.display, name);
-      OBR.broadcast?.sendMessage?.("rodeo.owlbear.charStats.rollResult", {
-        label: result.label,
-        content: result.display,
-        name,
-      });
+      const label = `${fullAbilityNames[abbr]} Save`;
+      broadcastRoll(label, data.save, "normal", name);
     });
 
     box.addEventListener("contextmenu", (e) => {
@@ -49,13 +56,7 @@ export function renderSavingThrows(stats, name) {
         const label = `${fullAbilityNames[abbr]} Save${
           mode !== "normal" ? ` (${mode})` : ""
         }`;
-        const result = rollStat(label, data.save, mode);
-        showRollPopover(result.label, result.display, name);
-        OBR.broadcast?.sendMessage?.("rodeo.owlbear.charStats.rollResult", {
-          label: result.label,
-          content: result.display,
-          name,
-        });
+        broadcastRoll(label, data.save, mode, name);
       });
     });
 
@@ -82,13 +83,8 @@ export function renderAbilities(stats, name) {
     `;
 
     box.addEventListener("click", () => {
-      const result = rollStat(`${fullAbilityNames[abbr]} Check`, data.modifier);
-      showRollPopover(result.label, result.display, name);
-      OBR.broadcast?.sendMessage?.("rodeo.owlbear.charStats.rollResult", {
-        label: result.label,
-        content: result.display,
-        name,
-      });
+      const label = `${fullAbilityNames[abbr]} Check`;
+      broadcastRoll(label, data.modifier, "normal", name);
     });
 
     box.addEventListener("contextmenu", (e) => {
@@ -97,13 +93,7 @@ export function renderAbilities(stats, name) {
         const label = `${fullAbilityNames[abbr]} Check${
           mode !== "normal" ? ` (${mode})` : ""
         }`;
-        const result = rollStat(label, data.modifier, mode);
-        showRollPopover(result.label, result.display, name);
-        OBR.broadcast?.sendMessage?.("rodeo.owlbear.charStats.rollResult", {
-          label: result.label,
-          content: result.display,
-          name,
-        });
+        broadcastRoll(label, data.modifier, mode, name);
       });
     });
 

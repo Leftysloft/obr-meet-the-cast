@@ -33,21 +33,45 @@ const prettyNames = {
   persuasion: "Persuasion",
 };
 
+function attachSkillRollHandlers(box, skillName, modifier, charName) {
+  const baseLabel = `${skillName} Check`;
+
+  box.addEventListener("click", () => {
+    const result = rollStat(baseLabel, modifier);
+    showRollPopover(result.label, result.display, charName);
+    OBR.broadcast?.sendMessage?.("rodeo.owlbear.charSkills.rollResult", {
+      label: result.label,
+      content: result.display,
+      name: charName,
+    });
+  });
+
+  box.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    showRollModeMenu(e.clientX, e.clientY, (mode) => {
+      const modeLabel = `${baseLabel}${mode !== "normal" ? ` (${mode})` : ""}`;
+      const result = rollStat(modeLabel, modifier, mode);
+      showRollPopover(result.label, result.display, charName);
+      OBR.broadcast?.sendMessage?.("rodeo.owlbear.charSkills.rollResult", {
+        label: result.label,
+        content: result.display,
+        name: charName,
+      });
+    });
+  });
+}
+
 export async function renderSkills(charId) {
   OBR.onReady(async () => {
     const charData = await fetchCharacterData(charId);
     if (!charData || !charData.skills) return;
 
     const skillsDiv = document.getElementById("skills");
-    skillsDiv.innerHTML = ""; // clear previous skills grid
+    skillsDiv.innerHTML = "";
 
     const characterName = charData.name || "Unknown";
-
-    // Set the character name in the skills tab header
     const skillCharName = document.querySelector("#tab2 .char-name");
-    if (skillCharName) {
-      skillCharName.textContent = characterName;
-    }
+    if (skillCharName) skillCharName.textContent = characterName;
 
     for (const [ability, skills] of Object.entries(skillGroups)) {
       const groupDiv = document.createElement("div");
@@ -58,186 +82,72 @@ export async function renderSkills(charId) {
       groupDiv.appendChild(heading);
 
       const skillsGrid = document.createElement("div");
+      skillsGrid.classList.add("skills-grid");
+      groupDiv.appendChild(skillsGrid);
 
-      // Custom layout for Strength group
       if (ability === "Strength") {
-        skillsGrid.classList.add("skills-grid"); // still use class, but will override CSS later
-        skillsGrid.style.gridTemplateColumns = "1fr 2fr"; // 2-column custom layout
-        groupDiv.appendChild(skillsGrid);
+        skillsGrid.style.gridTemplateColumns = "1fr 2fr";
+      }
 
-        const athletics = skills[0];
-        const skillData = charData.skills[athletics];
-        if (skillData) {
-          const { modifier, adv, dis, prof = 1 } = skillData;
+      for (const skill of skills) {
+        const skillData = charData.skills[skill];
+        if (!skillData) continue;
 
-          const box = document.createElement("div");
-          box.className = "skill-box";
+        const { modifier, adv, dis, prof = 1 } = skillData;
 
-          if (adv) box.classList.add("advantage");
-          else if (dis) box.classList.add("disadvantage");
+        const box = document.createElement("div");
+        box.className = "skill-box";
+        if (adv) box.classList.add("advantage");
+        else if (dis) box.classList.add("disadvantage");
+        box.title = `Click to roll ${prettyNames[skill]}`;
 
-          box.title = `Click to roll ${prettyNames[athletics]}`;
+        const profCircle = document.createElement("div");
+        profCircle.classList.add("prof-circle");
 
-          const profCircle = document.createElement("div");
-          profCircle.classList.add("prof-circle");
-          console.log(
-            "Athletics proficiency level:",
-            charData.skills.athletics.prof
-          );
-
-          switch (prof) {
-            case 2:
-              profCircle.classList.add("prof-half");
-              break;
-            case 3:
-              profCircle.classList.add("prof-full");
-              break;
-            case 4:
-              profCircle.classList.add("prof-expert");
-              break;
-            default:
-              profCircle.classList.add("prof-none");
-          }
-
-          box.innerHTML = `
-        <div class="score-wrapper">
-          ${profCircle.outerHTML}
-          <div class="score">
-            ${modifier >= 0 ? "+" : ""}${modifier}
-          </div>
-        </div>
-        <div class="label">${prettyNames[athletics]}</div>
-      `;
-
-          box.addEventListener("click", () => {
-            const result = rollStat(
-              `${prettyNames[athletics]} Check`,
-              modifier
-            );
-            showRollPopover(result.label, result.display, characterName);
-            OBR.broadcast?.sendMessage?.(
-              "rodeo.owlbear.charSkills.rollResult",
-              {
-                label: result.label,
-                content: result.display,
-                name: characterName,
-              }
-            );
-          });
-
-          box.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-            showRollModeMenu(e.clientX, e.clientY, (mode) => {
-              const label = `${prettyNames[athletics]} Check${
-                mode !== "normal" ? ` (${mode})` : ""
-              }`;
-              const result = rollStat(label, modifier, mode);
-              showRollPopover(result.label, result.display, characterName);
-              OBR.broadcast?.sendMessage?.(
-                "rodeo.owlbear.charSkills.rollResult",
-                {
-                  label: result.label,
-                  content: result.display,
-                  name: characterName,
-                }
-              );
-            });
-          });
-
-          skillsGrid.appendChild(box);
+        switch (prof) {
+          case 2:
+            profCircle.classList.add("prof-half");
+            break;
+          case 3:
+            profCircle.classList.add("prof-full");
+            break;
+          case 4:
+            profCircle.classList.add("prof-expert");
+            break;
+          default:
+            profCircle.classList.add("prof-none");
         }
 
-        // Custom map key box
+        box.innerHTML = `
+          <div class="score-wrapper">
+            ${profCircle.outerHTML}
+            <div class="score">${modifier >= 0 ? "+" : ""}${modifier}</div>
+          </div>
+          <div class="label">${prettyNames[skill]}</div>
+        `;
+
+        attachSkillRollHandlers(
+          box,
+          prettyNames[skill],
+          modifier,
+          characterName
+        );
+        skillsGrid.appendChild(box);
+      }
+
+      // Add proficiency legend only once (for Strength group)
+      if (ability === "Strength") {
         const mapKeyBox = document.createElement("div");
         mapKeyBox.className = "skill-box";
         mapKeyBox.innerHTML = `
-    <div class="prof-key">
-      <div><span class="prof-circle prof-none"></span> No Proficiency</div>
-      <div><span class="prof-circle prof-half"></span> Half Proficiency</div>
-      <div><span class="prof-circle prof-full"></span> Proficient</div>
-      <div><span class="prof-circle prof-expert"></span> Expertise</div>
-    </div>
-    `;
-        skillsGrid.appendChild(mapKeyBox);
-      } else {
-        // Default layout for other abilities
-        skillsGrid.classList.add("skills-grid");
-        groupDiv.appendChild(skillsGrid);
-
-        for (const skill of skills) {
-          const skillData = charData.skills[skill];
-          if (!skillData) continue;
-
-          const { modifier, adv, dis, prof = 1 } = skillData;
-
-          const box = document.createElement("div");
-          box.className = "skill-box";
-
-          if (adv) box.classList.add("advantage");
-          else if (dis) box.classList.add("disadvantage");
-
-          box.title = `Click to roll ${prettyNames[skill]}`;
-
-          const profCircle = document.createElement("div");
-          profCircle.classList.add("prof-circle");
-          switch (prof) {
-            case 2:
-              profCircle.classList.add("prof-half");
-              break;
-            case 3:
-              profCircle.classList.add("prof-full");
-              break;
-            case 4:
-              profCircle.classList.add("prof-expert");
-              break;
-            default:
-              profCircle.classList.add("prof-none");
-          }
-
-          box.innerHTML = `
-        <div class="score-wrapper">
-          ${profCircle.outerHTML}
-          <div class="score">
-            ${modifier >= 0 ? "+" : ""}${modifier}
+          <div class="prof-key">
+            <div><span class="prof-circle prof-none"></span> No Proficiency</div>
+            <div><span class="prof-circle prof-half"></span> Half Proficiency</div>
+            <div><span class="prof-circle prof-full"></span> Proficient</div>
+            <div><span class="prof-circle prof-expert"></span> Expertise</div>
           </div>
-        </div>
-        <div class="label">${prettyNames[skill]}</div>
-      `;
-
-          box.addEventListener("click", () => {
-            const result = rollStat(`${prettyNames[skill]} Check`, modifier);
-            showRollPopover(result.label, result.display, characterName);
-            OBR.broadcast?.sendMessage?.(
-              "rodeo.owlbear.charSkills.rollResult",
-              {
-                label: result.label,
-                content: result.display,
-                name: characterName,
-              }
-            );
-          });
-
-          box.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-            showRollModeMenu(e.clientX, e.clientY, (mode) => {
-              const label = `${prettyNames[skill]} Check${
-                mode !== "normal" ? ` (${mode})` : ""
-              }`;
-              const result = rollStat(label, modifier, mode);
-              showRollPopover(result.label, result.display, characterName);
-              OBR.broadcast?.sendMessage?.(
-                "rodeo.owlbear.charSkills.rollResult",
-                {
-                  label: result.label,
-                  content: result.display,
-                  name: characterName,
-                }
-              );
-            });
-          });
-
-          skillsGrid.appendChild(box);
-        }
+        `;
+        skillsGrid.appendChild(mapKeyBox);
       }
 
       skillsDiv.appendChild(groupDiv);

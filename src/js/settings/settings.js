@@ -1,3 +1,4 @@
+// settings.js
 import OBR from "@owlbear-rodeo/sdk";
 import { ID } from "../constants.js";
 
