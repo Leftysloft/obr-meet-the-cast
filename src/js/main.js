@@ -90,19 +90,19 @@ OBR.onReady(async () => {
     setupSettings();
   }
 
-  // Listen for scene ready state changes
+  // ✅ Add this check FIRST
+  if (await OBR.scene.isReady()) {
+    await initialize();
+  }
+
+  // ✅ Still listen for changes in case the scene becomes ready later
   OBR.scene.onReadyChange(async (ready) => {
     if (ready) {
       await initialize();
     }
   });
 
-  // If scene is already ready when we get here, initialize immediately
-  // if (OBR.scene.isReady()) {
-  //   await initialize();
-  // }
-
-  // Set up broadcast listener as before
+  // Leave broadcast listener as-is
   if (OBR.broadcast?.onMessage) {
     OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
       const { label, content, name } = event.data;
@@ -416,7 +416,7 @@ async function loadCharacterDetails(charId, data, item) {
     smoothTransitionHealthBar(healthBarFill, targetPercentage);
   }
 
-  lastCharacterData[charId] = { ...data };
+  // lastCharacterData[charId] = { ...data };
   lastCharacterData[charId] = data;
 }
 
