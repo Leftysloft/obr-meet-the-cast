@@ -35,17 +35,17 @@ h3 {
 }
 
 .stat-block {
-  background-color: #1f1f1f;
+  margin-bottom: 0.5rem;
+  background: #1f1f1f;
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  border-radius: 8px;
   color: var(--color-primary, #007bff);
-  padding: 0.8rem;
-  border-radius: 12px;
-  margin-top: 0px;
   font-family: monospace;
 }
 
 .abilities,
-.saving-throws,
-.senses {
+.saving-throws {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
@@ -56,10 +56,22 @@ h3 {
   .abilities {
     grid-template-columns: repeat(6, 1fr);
   }
-  .saving-throws,
-  .senses {
+  .saving-throws {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+.senses {
+  /* your new styles here */
+  display: flex; /* example: use flexbox */
+  flex-direction: column; /* stack senses vertically */
+  gap: 0.5rem;
+  padding: 0, 1rem;
+  background-color: #222; /* or whatever you want */
+  border-radius: 8px;
+  color: #eee;
+  font-family: monospace;
+  font-size: 0.9rem;
 }
 
 /* Modern stat box styling */
@@ -199,9 +211,10 @@ hr {
   padding: 0.75rem;
   border-radius: 8px;
   color: #000;
+  font-family: monospace;
 }
 
-.skill-group > h4 {
+.skill-group > h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-weight: bold;

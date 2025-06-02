@@ -52,7 +52,7 @@ export async function renderSkills(charId) {
     const groupDiv = document.createElement("div");
     groupDiv.classList.add("skill-group");
 
-    const heading = document.createElement("h4");
+    const heading = document.createElement("h3");
     heading.textContent = ability;
     groupDiv.appendChild(heading);
 

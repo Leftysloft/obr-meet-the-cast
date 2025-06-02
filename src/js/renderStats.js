@@ -28,7 +28,7 @@ export function renderSavingThrows(stats, name) {
       : "";
 
     box.innerHTML = `
-      <div class="score">${data.score} ${profStar}</div>
+      <div class="score">${profStar}</div>
       <div class="mod">${formatBonus(data.save)}</div>
       <div class="label">${abbr.toUpperCase()} Save</div>
     `;

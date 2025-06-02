@@ -43,6 +43,22 @@ OBR.onReady(async () => {
     renderSavingThrows(data.stats, charName);
     renderSaveNotes(data.stats);
 
+    // Populate passive senses
+    const sensesContainer = document.querySelector(".senses");
+
+    if (sensesContainer && data.skills) {
+      const passivePerception = data.skills["passive_perception"] ?? "—";
+      const passiveInvestigation = data.skills["passive_investigation"] ?? "—";
+      const passiveInsight = data.skills["passive_insight"] ?? "—";
+
+      sensesContainer.innerHTML = `
+        <div>Passive Perception: ${passivePerception}</div>
+        <div>Passive Investigation: ${passiveInvestigation}</div>
+        <div>Passive Insight: ${passiveInsight}</div>
+
+  `;
+    }
+
     document.getElementById("stats").style.display = "none";
   } catch (err) {
     console.error(err);
