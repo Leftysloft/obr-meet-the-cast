@@ -8,6 +8,8 @@ body {
 .character-card {
   border: 1px solid #ccc;
   padding: 1rem;
+  padding-top: 0rem;
+  padding-bottom: 0rem;
   border-radius: 8px;
 }
 
