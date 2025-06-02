@@ -107,6 +107,10 @@ OBR.onReady(async () => {
       const { label, content, name } = event.data;
       showRollPopover(label, content, name);
     });
+    OBR.broadcast.onMessage("rodeo.owlbear.charSkills.rollResult", (event) => {
+      const { label, content, name } = event.data;
+      showRollPopover(label, content, name);
+    });
   } else {
     console.warn("Broadcast listener unavailable");
   }
