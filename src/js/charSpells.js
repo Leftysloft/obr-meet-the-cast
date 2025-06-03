@@ -31,6 +31,11 @@ export async function renderSpells(characterId) {
   const container = document.createElement("div");
   container.classList.add("spells-container");
 
+  const overlay = document.createElement("div");
+  overlay.classList.add("dev-overlay");
+  overlay.innerHTML = `<div>Under<br>Development</div>`;
+  container.appendChild(overlay);
+
   spellData.forEach((levelData) => {
     const levelBlock = document.createElement("div");
     levelBlock.classList.add("spell-level-block");
