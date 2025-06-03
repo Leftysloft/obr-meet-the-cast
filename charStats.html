@@ -14,6 +14,7 @@
       <div class="tab-buttons">
         <button class="tab-button active" data-tab="tab1">Stats</button>
         <button class="tab-button" data-tab="tab2">Skills</button>
+        <button class="tab-button" data-tab="tab3">Spells</button>
         <button id="closeBtn">Close</button>
       </div>
 
@@ -37,9 +38,9 @@
           <div class="section">
             <h3>Passive Senses</h3>
             <div class="senses">
-              <div>Passive Perception: 12</div>
-              <div>Passive Investigation: 11</div>
-              <div>Passive Insight: 12</div>
+              <div>Passive Perception: None</div>
+              <div>Passive Investigation: None</div>
+              <div>Passive Insight: None</div>
             </div>
           </div>
         </div>
@@ -77,11 +78,19 @@
           </div>
         </div>
       </div>
+
+      <!-- Spells Tab -->
+      <div id="tab3" class="tab-content">
+        <div id="spells" class="spells-container">
+          <p>Loading spells...</p>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="src/js/charStats.js"></script>
     <script type="module">
       import { renderSkills } from "./src/js/charSkills.js";
+      import { renderSpells } from "./src/js/charSpells.js"; // 👈 New import
 
       const params = new URLSearchParams(window.location.search);
       const characterId = params.get("charId");
@@ -105,6 +114,8 @@
 
           if (tabId === "tab2" && characterId) {
             renderSkills(characterId);
+          } else if (tabId === "tab3" && characterId) {
+            renderSpells(characterId); // 👈 Render spells on tab open
           }
         });
       });
