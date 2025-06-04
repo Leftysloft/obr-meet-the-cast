@@ -112,10 +112,7 @@ OBR.onReady(async () => {
       const { label, content, name } = event.data;
       const type = event.type;
 
-      if (
-        type === "rodeo.owlbear.charStats.rollResult" ||
-        type === "rodeo.owlbear.charskills.rollResult"
-      ) {
+      if (type === "rodeo.owlbear.charStats.rollResult") {
         showRollPopover(label, content, name);
       }
     });
