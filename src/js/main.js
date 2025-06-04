@@ -59,7 +59,7 @@ OBR.onReady(async () => {
       handleSceneItems(items);
     });
 
-    OBR.scene.items.onMetadataChange(async (changedItems) => {
+    OBR.scene.items.onChange(async (changedItems) => {
     const allItems = await OBR.scene.items.getItems();
     handleSceneItems(allItems);
     });
