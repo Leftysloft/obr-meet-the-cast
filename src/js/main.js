@@ -111,6 +111,15 @@ OBR.onReady(async () => {
   } else {
     console.warn("Broadcast listener unavailable");
   }
+
+    if (OBR.broadcast?.onMessage) {
+    OBR.broadcast.onMessage("rodeo.owlbear.charSkills.rollResult", (event) => {
+      const { label, content, name } = event.data;
+      showRollPopover(label, content, name);
+    });
+  } else {
+    console.warn("Broadcast listener unavailable");
+  }
 });
 
 async function handleSceneItems(items) {
