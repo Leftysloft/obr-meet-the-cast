@@ -119,14 +119,14 @@ OBR.onReady(async () => {
   } else {
     console.warn("Broadcast listener unavailable");
   }
-  if (OBR.broadcast?.onMessage) {
-    OBR.broadcast.onMessage(
-      "rodeo.owlbear.charSkills.rollResult",
-      handleRollResult
-    );
-  } else {
-    console.warn("Broadcast listener unavailable");
-  }
+  // if (OBR.broadcast?.onMessage) {
+  //   OBR.broadcast.onMessage(
+  //     "rodeo.owlbear.charSkills.rollResult",
+  //     handleRollResult
+  //   );
+  // } else {
+  //   console.warn("Broadcast listener unavailable");
+  // }
 });
 
 async function handleSceneItems(items) {
