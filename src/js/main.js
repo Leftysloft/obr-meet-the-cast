@@ -56,6 +56,8 @@ OBR.onReady(async () => {
     handleSceneItems(items);
 
     OBR.scene.items.onChange((items) => {
+        const allItems = await OBR.scene.items.getItems();
+
       handleSceneItems(items);
     });
 
