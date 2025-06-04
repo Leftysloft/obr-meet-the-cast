@@ -128,13 +128,16 @@ async function handleSceneItems(items) {
     }
   });
 
-  Object.keys(lastCharacterData).forEach((charId) => {
-    if (!newCharIds.includes(charId)) {
-      const charElement = document.getElementById(charId);
-      if (charElement) {
-        charElement.remove();
-      }
-      delete lastCharacterData[charId];
+Object.keys(lastCharacterData).forEach((charId) => {
+  const stillExists = items.some(
+    (item) => item.metadata?.[`${ID}/metadata`]?.character_id === charId
+  );
+  if (!stillExists) {
+    const charElement = document.getElementById(charId);
+    if (charElement) {
+      charElement.remove();
     }
-  });
+    delete lastCharacterData[charId];
+  }
+});
 }
