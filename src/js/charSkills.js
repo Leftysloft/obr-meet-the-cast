@@ -112,9 +112,9 @@ export async function renderSkills(charId) {
           const result = rollStat(`${prettyNames[athletics]} Check`, modifier);
           showRollPopover(result.label, result.display, characterName);
           OBR.broadcast?.sendMessage?.("rodeo.owlbear.charSkills.rollResult", {
-            label: result.label,
-            content: result.display,
-            name: characterName,
+            label: String(result.label),
+            content: String(result.display),
+            name: String(characterName),
           });
         });
 
