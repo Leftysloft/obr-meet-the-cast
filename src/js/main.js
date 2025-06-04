@@ -55,15 +55,10 @@ OBR.onReady(async () => {
     const items = await OBR.scene.items.getItems();
     handleSceneItems(items);
 
-    OBR.scene.items.onChange((items) => {
-      handleSceneItems(items);
+    OBR.scene.items.onChange(async () => {
+      const allItems = await OBR.scene.items.getItems();
+      handleSceneItems(allItems);
     });
-
-    OBR.scene.items.onChange(async (changedItems) => {
-    const allItems = await OBR.scene.items.getItems();
-    handleSceneItems(allItems);
-    });
-
 
     try {
       const metadata = await OBR.room.getMetadata();
@@ -71,7 +66,7 @@ OBR.onReady(async () => {
         OBR.action.open();
       }
     } catch (error) {
-      console.error("Error retrieving metadata. Check path.:", error);
+      console.error("Error retrieving metadata. Check path:", error);
     }
 
     setupContextMenu();
@@ -96,12 +91,14 @@ async function handleSceneItems(items) {
     (item) => item.metadata?.[`${ID}/metadata`]?.character_id
   );
 
-  const newCharIds = charItems.map(
-    (item) => item.metadata?.[`${ID}/metadata`]?.character_id
+  const activeCharIds = new Set(
+    charItems.map(
+      (item) => item.metadata?.[`${ID}/metadata`]?.character_id
+    )
   );
 
-  newCharIds.forEach((charId, index) => {
-    const item = charItems[index];
+  charItems.forEach((item) => {
+    const charId = item.metadata[`${ID}/metadata`].character_id;
 
     fetchCharacterData(charId).then(async (data) => {
       const freshItems = await OBR.scene.items.getItems();
@@ -127,23 +124,22 @@ async function handleSceneItems(items) {
     }
   });
 
+  // Stop polling for removed characters
   Object.keys(pollingIntervals).forEach((charId) => {
-    if (!newCharIds.includes(charId)) {
+    if (!activeCharIds.has(charId)) {
       clearInterval(pollingIntervals[charId]);
       delete pollingIntervals[charId];
     }
   });
 
-Object.keys(lastCharacterData).forEach((charId) => {
-  const stillExists = items.some(
-    (item) => item.metadata?.[`${ID}/metadata`]?.character_id === charId
-  );
-  if (!stillExists) {
-    const charElement = document.getElementById(charId);
-    if (charElement) {
-      charElement.remove();
+  // Remove DOM and cache entries for removed characters
+  Object.keys(lastCharacterData).forEach((charId) => {
+    if (!activeCharIds.has(charId)) {
+      const charElement = document.getElementById(charId);
+      if (charElement) {
+        charElement.remove();
+      }
+      delete lastCharacterData[charId];
     }
-    delete lastCharacterData[charId];
-  }
-});
+  });
 }
