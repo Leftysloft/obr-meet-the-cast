@@ -114,7 +114,7 @@ OBR.onReady(async () => {
 
       if (
         type === "rodeo.owlbear.charStats.rollResult" ||
-        type === "rodeo.owlbear.charSkills.rollResult"
+        type === "rodeo.owlbear.charskills.rollResult"
       ) {
         showRollPopover(label, content, name);
       }
