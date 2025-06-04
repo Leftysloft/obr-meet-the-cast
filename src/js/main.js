@@ -107,9 +107,19 @@ OBR.onReady(async () => {
     }
   });
 
-  // Leave broadcast listener as-is
+  // Broadcast stats to players
   if (OBR.broadcast?.onMessage) {
     OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
+      const { label, content, name } = event.data;
+      showRollPopover(label, content, name);
+    });
+  } else {
+    console.warn("Broadcast listener unavailable");
+  }
+
+  // Broadcast skills to players
+  if (OBR.broadcast?.onMessage) {
+    OBR.broadcast.onMessage("rodeo.owlbear.charskills.rollResult", (event) => {
       const { label, content, name } = event.data;
       showRollPopover(label, content, name);
     });
