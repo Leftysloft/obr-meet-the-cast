@@ -112,21 +112,16 @@ OBR.onReady(async () => {
       const { label, content, name } = event.data;
       const type = event.type;
 
-      if (type === "rodeo.owlbear.charStats.rollResult") {
+      if (
+        type === "rodeo.owlbear.charStats.rollResult" ||
+        type === "rodeo.owlbear.charskills.rollResult"
+      ) {
         showRollPopover(label, content, name);
       }
     });
   } else {
     console.warn("Broadcast listener unavailable");
   }
-  // if (OBR.broadcast?.onMessage) {
-  //   OBR.broadcast.onMessage(
-  //     "rodeo.owlbear.charSkills.rollResult",
-  //     handleRollResult
-  //   );
-  // } else {
-  //   console.warn("Broadcast listener unavailable");
-  // }
 });
 
 async function handleSceneItems(items) {
