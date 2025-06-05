@@ -23,6 +23,11 @@ async function fetchInitialSettings() {
   const metadata = await OBR.room.getMetadata();
   const settings = metadata?.[`${ID}/settings`] ?? {};
   updateInspirationVisibility(settings.showInspiration ?? true);
+
+  const labelEl = document.getElementById("details-tab-label");
+  if (labelEl && settings.detailsTabLabel) {
+    labelEl.textContent = settings.detailsTabLabel;
+  }
 }
 
 function showRollPopover(label, content, name = "Unknown") {
