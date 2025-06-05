@@ -1,4 +1,4 @@
-//main.js
+//main.js 6-1-25-2
 import "../css/style.css";
 import OBR from "@owlbear-rodeo/sdk";
 import { setupContextMenu } from "./contextMenu.js";
@@ -23,11 +23,6 @@ async function fetchInitialSettings() {
   const metadata = await OBR.room.getMetadata();
   const settings = metadata?.[`${ID}/settings`] ?? {};
   updateInspirationVisibility(settings.showInspiration ?? true);
-
-  const labelEl = document.getElementById("details-tab-label");
-  if (labelEl && settings.detailsTabLabel) {
-    labelEl.textContent = settings.detailsTabLabel;
-  }
 }
 
 function showRollPopover(label, content, name = "Unknown") {
@@ -95,29 +90,32 @@ OBR.onReady(async () => {
     setupSettings();
   }
 
-  // ✅ Add this check FIRST
-  if (await OBR.scene.isReady()) {
-    await initialize();
-  }
-
-  // ✅ Still listen for changes in case the scene becomes ready later
+  // Listen for scene ready state changes
   OBR.scene.onReadyChange(async (ready) => {
     if (ready) {
       await initialize();
     }
   });
 
-  if (OBR.broadcast?.onMessage) {
-    OBR.broadcast.onMessage((event) => {
-      const { label, content, name } = event.data;
-      const type = event.type;
+  // If scene is already ready when we get here, initialize immediately
+  // if (OBR.scene.isReady()) {
+  //   await initialize();
+  // }
 
-      if (
-        type === "rodeo.owlbear.charStats.rollResult" ||
-        type === "rodeo.owlbear.charskills.rollResult"
-      ) {
-        showRollPopover(label, content, name);
-      }
+  // Set up broadcast listener as before
+  if (OBR.broadcast?.onMessage) {
+    OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
+      const { label, content, name } = event.data;
+      showRollPopover(label, content, name);
+    });
+  } else {
+    console.warn("Broadcast listener unavailable");
+  }
+
+  if (OBR.broadcast?.onMessage) {
+    OBR.broadcast.onMessage("rodeo.owlbear.charSkills.rollResult", (event) => {
+      const { label, content, name } = event.data;
+      showRollPopover(label, content, name);
     });
   } else {
     console.warn("Broadcast listener unavailable");
@@ -427,7 +425,7 @@ async function loadCharacterDetails(charId, data, item) {
     smoothTransitionHealthBar(healthBarFill, targetPercentage);
   }
 
-  // lastCharacterData[charId] = { ...data };
+  lastCharacterData[charId] = { ...data };
   lastCharacterData[charId] = data;
 }
 
