@@ -1,26 +1,16 @@
 // src/js/charSpells.js
 import { fetchCharacterData } from "./characterData.js";
 
-export async function renderSpells(characterId) {
+export async function renderSpells(charId) {
   const spellsContainer = document.getElementById("spells");
   if (!spellsContainer) return;
 
-  // Fetch the character data from your Flask API
-  const response = await fetch(
-    `http://localhost:5000/api/character/${characterId}`
-  );
-  if (!response.ok) {
-    console.error("Failed to load character data.");
-    return;
-  }
+  const charData = await fetchCharacterData(charId);
+  if (!charData || !charData.spells) return;
 
-  const data = await response.json();
-  const { spells } = data;
+  const { slots = {}, prepared = [] } = charData.spells;
 
-  const slots = spells.slots || {};
-  const prepared = spells.prepared || [];
-
-  // Group spells by level
+  // Group and sort spells by level
   const spellsByLevel = {};
   prepared.forEach((spell) => {
     const lvl = spell.level.toString();
@@ -30,7 +20,7 @@ export async function renderSpells(characterId) {
     spellsByLevel[lvl].push(spell.name);
   });
 
-  // Sort spell names alphabetically for each level
+  // ✅ Alphabetize spells within each level
   for (const level in spellsByLevel) {
     spellsByLevel[level].sort((a, b) => a.localeCompare(b));
   }
@@ -61,10 +51,8 @@ export async function renderSpells(characterId) {
   const container = document.createElement("div");
   container.classList.add("spells-container");
 
-  // Optional: Dev overlay
   const overlay = document.createElement("div");
   overlay.classList.add("dev-overlay");
-  // overlay.innerHTML = `<div>Under<br>Development</div>`;s
   container.appendChild(overlay);
 
   // Render each level block
@@ -72,13 +60,11 @@ export async function renderSpells(characterId) {
     const levelBlock = document.createElement("div");
     levelBlock.classList.add("spell-level-block");
 
-    // Header
     const header = document.createElement("h3");
     header.textContent =
       levelData.level === 0 ? "Cantrips" : `Level ${levelData.level}`;
     levelBlock.appendChild(header);
 
-    // Slots (only for levels > 0)
     if (levelData.level > 0) {
       const slotRow = document.createElement("div");
       slotRow.classList.add("slot-row");
@@ -95,7 +81,6 @@ export async function renderSpells(characterId) {
       levelBlock.appendChild(slotRow);
     }
 
-    // Spells
     const spellList = document.createElement("div");
     spellList.classList.add("spell-list");
 
