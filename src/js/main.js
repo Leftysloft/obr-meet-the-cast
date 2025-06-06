@@ -1,10 +1,11 @@
-// main.js
+//main.js 6-1-25-2
 import "../css/style.css";
 import OBR from "@owlbear-rodeo/sdk";
 import { setupContextMenu } from "./contextMenu.js";
 import { setupSettings } from "./settings/settings.js";
 import { ID } from "./constants.js";
 import { fetchCharacterData } from "./characterData.js";
+// import { setupLightSheetList } from "./lightSheetList.js";
 
 let pollingIntervals = {};
 let lastCharacterData = {};
@@ -22,10 +23,16 @@ async function fetchInitialSettings() {
   const metadata = await OBR.room.getMetadata();
   const settings = metadata?.[`${ID}/settings`] ?? {};
   updateInspirationVisibility(settings.showInspiration ?? true);
+
+  const labelEl = document.getElementById("details-tab-label");
+  if (labelEl && settings.detailsTabLabel) {
+    labelEl.textContent = settings.detailsTabLabel;
+  }
 }
 
 function showRollPopover(label, content, name = "Unknown") {
   const popoverId = `roll-result-${Date.now()}`;
+
   OBR.popover.open({
     id: popoverId,
     url: `/rollResult.html?label=${encodeURIComponent(
@@ -39,6 +46,7 @@ function showRollPopover(label, content, name = "Unknown") {
     },
     hidePaper: true,
   });
+
   setTimeout(() => {
     OBR.popover.close(popoverId);
   }, 4000);
@@ -87,6 +95,7 @@ OBR.onReady(async () => {
     setupSettings();
   }
 
+  // Listen for scene ready state changes
   OBR.scene.onReadyChange(async (ready) => {
     if (ready) {
       await initialize();
@@ -94,24 +103,32 @@ OBR.onReady(async () => {
   });
 
   // If scene is already ready when we get here, initialize immediately
-  if (OBR.scene.isReady()) {
-    await initialize();
-  }
+  // if (OBR.scene.isReady()) {
+  //   await initialize();
+  // }
 
+  // Set up broadcast listener as before
   if (OBR.broadcast?.onMessage) {
     OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
       const { label, content, name } = event.data;
       showRollPopover(label, content, name);
     });
+  } else {
+    console.warn("Broadcast listener unavailable");
+  }
 
+  if (OBR.broadcast?.onMessage) {
     OBR.broadcast.onMessage("rodeo.owlbear.charSkills.rollResult", (event) => {
       const { label, content, name } = event.data;
       showRollPopover(label, content, name);
     });
+  } else {
+    console.warn("Broadcast listener unavailable");
   }
 });
 
 async function handleSceneItems(items) {
+  console.log("Handling scene items:", items); //Debug not loading error with no console errors
   const charItems = items.filter(
     (item) => item.metadata?.[`${ID}/metadata`]?.character_id
   );
@@ -122,12 +139,18 @@ async function handleSceneItems(items) {
 
   newCharIds.forEach((charId, index) => {
     const item = charItems[index];
+    const lastData = lastCharacterData[charId];
 
+    // Always fetch and reload if item metadata may have changed
     fetchCharacterData(charId).then(async (data) => {
+      console.log("Fetched character data for", charId, data); //debug load failure with no error in console.
+
       const freshItems = await OBR.scene.items.getItems();
       const freshItem = freshItems.find((i) => i.id === item.id);
       if (data && freshItem) {
-        loadCharacterDetails(charId, data, freshItem);
+        loadCharacterDetails(charId, data, freshItem); // <- now using fresh item
+      } else {
+        console.error("Failed to fetch character data or item");
       }
     });
 
@@ -145,7 +168,6 @@ async function handleSceneItems(items) {
     }
   });
 
-  // Clean up polling intervals and UI elements for removed characters
   Object.keys(pollingIntervals).forEach((charId) => {
     if (!newCharIds.includes(charId)) {
       clearInterval(pollingIntervals[charId]);
@@ -168,21 +190,23 @@ async function loadCharacterDetails(charId, data, item) {
   const container = document.getElementById("details-tab");
   if (!container) return;
 
-  // Determine player role and whether to show character details
   const isGM = (await OBR.player.getRole()) === "GM";
   const showToPlayers =
     item.metadata?.[`${ID}/metadata`]?.showToPlayers ?? false;
   const shouldShow = isGM || showToPlayers;
+  const existingDiv = document.getElementById(charId); // <-- this was missing!
 
-  // Remove the character's card if it shouldn't be shown
+  // If the card exists but should no longer be shown, remove it
   if (!shouldShow) {
-    const existingDiv = document.getElementById(charId);
     if (existingDiv) {
       existingDiv.remove();
       delete lastCharacterData[charId];
     }
     return;
   }
+
+  // If player and checkbox not enabled, do not show
+  if (!isGM && !showToPlayers) return;
 
   let characterDiv = document.getElementById(charId);
   const lastData = lastCharacterData[charId];
@@ -215,8 +239,8 @@ async function loadCharacterDetails(charId, data, item) {
       </div>
     `;
 
+    // GM-only checkbox for show/hide to players
     if (isGM) {
-      // Add checkbox for GM to toggle player visibility
       const checkbox = document.createElement("label");
       checkbox.style.display = "block";
       checkbox.style.marginTop = "4px";
@@ -240,6 +264,15 @@ async function loadCharacterDetails(charId, data, item) {
             i.metadata = newMetadata;
           }
         });
+
+        // ✅ Diagnostic check to confirm the update persisted
+        const updatedItems = await OBR.scene.items.getItems();
+        const updatedItem = updatedItems.find((i) => i.id === item.id);
+
+        // console.log(
+        //   "Updated item metadata:",
+        //   updatedItem.metadata?.[`${ID}/metadata`]
+        // );
       });
 
       checkbox.appendChild(input);
@@ -248,27 +281,34 @@ async function loadCharacterDetails(charId, data, item) {
     }
   }
 
-  // Update character info only if changed
+  const charNameEl = characterDiv.querySelector(".char-name");
   if (!lastData || lastData.name !== data.name)
-    characterDiv.querySelector(".char-name").textContent = data.name;
+    charNameEl.textContent = data.name;
 
-  characterDiv.querySelector(".char-name").style.cursor = "pointer";
+  charNameEl.style.cursor = "pointer"; // indicate clickable
 
-  characterDiv.querySelector(".char-name").onclick = async () => {
+  charNameEl.onclick = async () => {
     const modalId = `${ID}/modal/${charId}`;
 
+    // Get current player's ID
     const playerId = await OBR.player.getId();
+
+    // Get current player's role ("GM" or "Player")
     const role = await OBR.player.getRole();
 
+    // Get room metadata (includes your settings)
     const metadata = await OBR.room.getMetadata();
     const settings = metadata?.[`${ID}/settings`] ?? {};
+
+    // Determine stat block access setting ("gmOwner" or "all")
     const accessSetting = settings.statBlockAccess ?? "gmOwner";
 
-    // Find owner of character item
+    // Get the item representing this character to find its owner ID
     const items = await OBR.scene.items.getItems();
-    const charItem = items.find(
-      (item) => item.metadata?.[`${ID}/metadata`]?.character_id === charId
-    );
+    const charItem = items.find((item) => {
+      // Assuming character_id stored in metadata matches charId
+      return item.metadata?.[`${ID}/metadata`]?.character_id === charId;
+    });
 
     if (!charItem) {
       console.warn("Character item not found.");
@@ -276,10 +316,16 @@ async function loadCharacterDetails(charId, data, item) {
     }
 
     const ownerId = charItem.createdUserId;
+
+    // Check if current player is GM
     const isGM = role === "GM";
+
+    // Check if current player is the owner of this character
     const isOwner = playerId === ownerId;
 
-    // Check access permissions
+    // Access logic:
+    // If setting is "all" => everyone can view
+    // If setting is "gmOwner" => only GM or owner can view
     const allowed =
       accessSetting === "all" ||
       (accessSetting === "gmOwner" && (isGM || isOwner));
@@ -289,7 +335,7 @@ async function loadCharacterDetails(charId, data, item) {
       return;
     }
 
-    // Open stat block popover if allowed
+    // If allowed, open the stat block popup
     OBR.popover.open({
       id: modalId,
       url: `/charStats.html?charId=${charId}&name=${encodeURIComponent(
@@ -323,20 +369,17 @@ async function loadCharacterDetails(charId, data, item) {
     ).innerHTML = `<strong>AC:</strong> ${data.ac}`;
 
   const charImg = characterDiv.querySelector(".char-img");
+  const charLink = characterDiv.querySelector(".char-link");
   if (!lastData || lastData.image_url !== data.image_url) {
     if (data.image_url) {
       charImg.src = data.image_url;
       charImg.alt = `${data.name}'s portrait`;
     } else {
+      // No image: use transparent pixel and show "No Image" overlay
       charImg.src =
-        "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+        "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="; // 1x1 transparent gif
       charImg.alt = "No image available";
-      const wrapper = charImg.parentElement;
-      wrapper.style.position = "relative";
-
-      const existingOverlay = wrapper.querySelector(".no-image-overlay");
-      if (existingOverlay) existingOverlay.remove();
-
+      // Add "No Image" text over it
       const noImageOverlay = document.createElement("div");
       noImageOverlay.textContent = "No Image";
       noImageOverlay.style.position = "absolute";
@@ -345,16 +388,20 @@ async function loadCharacterDetails(charId, data, item) {
       noImageOverlay.style.transform = "translate(-50%, -50%)";
       noImageOverlay.style.color = "#999";
       noImageOverlay.style.fontWeight = "bold";
-      noImageOverlay.style.pointerEvents = "none";
+      noImageOverlay.style.pointerEvents = "none"; // keep it clickable underneath
       noImageOverlay.classList.add("no-image-overlay");
 
+      const wrapper = charImg.parentElement;
+      wrapper.style.position = "relative";
+      // Remove any existing overlay first
+      const existingOverlay = wrapper.querySelector(".no-image-overlay");
+      if (existingOverlay) existingOverlay.remove();
       wrapper.appendChild(noImageOverlay);
     }
   }
 
   charImg.style.cursor = "pointer";
 
-  const charLink = characterDiv.querySelector(".char-link");
   charLink.onclick = (event) => {
     event.preventDefault();
     const url = `https://www.dndbeyond.com/characters/${charId}`;
@@ -383,6 +430,7 @@ async function loadCharacterDetails(charId, data, item) {
     smoothTransitionHealthBar(healthBarFill, targetPercentage);
   }
 
+  lastCharacterData[charId] = { ...data };
   lastCharacterData[charId] = data;
 }
 
