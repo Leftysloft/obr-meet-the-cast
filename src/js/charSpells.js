@@ -6,13 +6,12 @@ export async function renderSpells(characterId) {
   if (!spellsContainer) return;
 
   // Fetch the character data from your Flask API
-  const response = await fetch(
   const url = `https://lefty469.pythonanywhere.com/api/character/${charId}`;
-
-  if (!response.ok) {
-    console.error("Failed to load character data.");
-    return;
-  }
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Failed to fetch character data");
+    }
 
   const data = await response.json();
   const { spells } = data;
