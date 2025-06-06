@@ -7,8 +7,8 @@ export async function renderSpells(characterId) {
 
   // Fetch the character data from your Flask API
   const response = await fetch(
-    `http://localhost:5000/api/character/${characterId}`
-  );
+  const url = `https://lefty469.pythonanywhere.com/api/character/${charId}`;
+
   if (!response.ok) {
     console.error("Failed to load character data.");
     return;
