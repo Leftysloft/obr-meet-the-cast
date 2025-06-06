@@ -1,27 +1,192 @@
-// characterDetails.js
+//main.js 6-1-25-2
+import "../css/style.css";
 import OBR from "@owlbear-rodeo/sdk";
+import { setupContextMenu } from "./contextMenu.js";
+import { setupSettings } from "./settings/settings.js";
 import { ID } from "./constants.js";
+import { fetchCharacterData } from "./characterData.js";
+// import { setupLightSheetList } from "./lightSheetList.js";
 
+let pollingIntervals = {};
 let lastCharacterData = {};
 let characterWindow = null;
 let showInspiration = true;
 
-export function setInspirationVisibility(enabled) {
+function updateInspirationVisibility(enabled) {
   showInspiration = enabled;
   document.querySelectorAll(".char-inspiration").forEach((el) => {
     el.style.display = enabled ? "" : "none";
   });
 }
 
-export function removeCharacterCard(charId) {
-  const charElement = document.getElementById(charId);
-  if (charElement) {
-    charElement.remove();
+async function fetchInitialSettings() {
+  const metadata = await OBR.room.getMetadata();
+  const settings = metadata?.[`${ID}/settings`] ?? {};
+  updateInspirationVisibility(settings.showInspiration ?? true);
+
+  const labelEl = document.getElementById("details-tab-label");
+  if (labelEl && settings.detailsTabLabel) {
+    labelEl.textContent = settings.detailsTabLabel;
   }
-  delete lastCharacterData[charId];
 }
 
-export async function loadCharacterDetails(charId, data, item) {
+function showRollPopover(label, content, name = "Unknown") {
+  const popoverId = `roll-result-${Date.now()}`;
+
+  OBR.popover.open({
+    id: popoverId,
+    url: `/rollResult.html?label=${encodeURIComponent(
+      label
+    )}&content=${encodeURIComponent(content)}&name=${encodeURIComponent(name)}`,
+    height: 150,
+    width: 250,
+    anchorOrigin: {
+      horizontal: "CENTER",
+      vertical: "TOP",
+    },
+    hidePaper: true,
+  });
+
+  setTimeout(() => {
+    OBR.popover.close(popoverId);
+  }, 4000);
+}
+
+OBR.onReady(async () => {
+  async function initialize() {
+    await fetchInitialSettings();
+
+    OBR.room.onMetadataChange((metadata) => {
+      const settings = metadata?.[`${ID}/settings`] ?? {};
+      updateInspirationVisibility(settings.showInspiration ?? true);
+
+      const labelEl = document.getElementById("details-tab-label");
+      if (labelEl && settings.detailsTabLabel) {
+        labelEl.textContent = settings.detailsTabLabel;
+      }
+    });
+
+    const usageGuide = document.getElementById("usageButton");
+    usageGuide.onclick = () => {
+      window.open(
+        "https://github.com/Leftysloft/obr-meet-the-cast/tree/5-28-25-2#readme",
+        "mozillaWindow",
+        "left=100,top=100,width=600,height=800"
+      );
+    };
+
+    const items = await OBR.scene.items.getItems();
+    handleSceneItems(items);
+
+    OBR.scene.items.onChange((items) => {
+      handleSceneItems(items);
+    });
+
+    try {
+      const metadata = await OBR.room.getMetadata();
+      if (metadata?.[`${ID}/settings`]?.openActionEnabled) {
+        OBR.action.open();
+      }
+    } catch (error) {
+      console.error("Error retrieving metadata. Check path.:", error);
+    }
+
+    setupContextMenu();
+    setupSettings();
+  }
+
+  // Listen for scene ready state changes
+  OBR.scene.onReadyChange(async (ready) => {
+    if (ready) {
+      await initialize();
+    }
+  });
+
+  // If scene is already ready when we get here, initialize immediately
+  // if (OBR.scene.isReady()) {
+  //   await initialize();
+  // }
+
+  // Set up broadcast listener as before
+  if (OBR.broadcast?.onMessage) {
+    OBR.broadcast.onMessage("rodeo.owlbear.charStats.rollResult", (event) => {
+      const { label, content, name } = event.data;
+      showRollPopover(label, content, name);
+    });
+  } else {
+    console.warn("Broadcast listener unavailable");
+  }
+
+  if (OBR.broadcast?.onMessage) {
+    OBR.broadcast.onMessage("rodeo.owlbear.charSkills.rollResult", (event) => {
+      const { label, content, name } = event.data;
+      showRollPopover(label, content, name);
+    });
+  } else {
+    console.warn("Broadcast listener unavailable");
+  }
+});
+
+async function handleSceneItems(items) {
+  console.log("Handling scene items:", items); //Debug not loading error with no console errors
+  const charItems = items.filter(
+    (item) => item.metadata?.[`${ID}/metadata`]?.character_id
+  );
+
+  const newCharIds = charItems.map(
+    (item) => item.metadata?.[`${ID}/metadata`]?.character_id
+  );
+
+  newCharIds.forEach((charId, index) => {
+    const item = charItems[index];
+    const lastData = lastCharacterData[charId];
+
+    // Always fetch and reload if item metadata may have changed
+    fetchCharacterData(charId).then(async (data) => {
+      console.log("Fetched character data for", charId, data); //debug load failure with no error in console.
+
+      const freshItems = await OBR.scene.items.getItems();
+      const freshItem = freshItems.find((i) => i.id === item.id);
+      if (data && freshItem) {
+        loadCharacterDetails(charId, data, freshItem); // <- now using fresh item
+      } else {
+        console.error("Failed to fetch character data or item");
+      }
+    });
+
+    if (!pollingIntervals[charId]) {
+      pollingIntervals[charId] = setInterval(async () => {
+        const data = await fetchCharacterData(charId);
+        if (data) {
+          const freshItems = await OBR.scene.items.getItems();
+          const freshItem = freshItems.find((i) => i.id === item.id);
+          if (freshItem) {
+            loadCharacterDetails(charId, data, freshItem);
+          }
+        }
+      }, 10000);
+    }
+  });
+
+  Object.keys(pollingIntervals).forEach((charId) => {
+    if (!newCharIds.includes(charId)) {
+      clearInterval(pollingIntervals[charId]);
+      delete pollingIntervals[charId];
+    }
+  });
+
+  Object.keys(lastCharacterData).forEach((charId) => {
+    if (!newCharIds.includes(charId)) {
+      const charElement = document.getElementById(charId);
+      if (charElement) {
+        charElement.remove();
+      }
+      delete lastCharacterData[charId];
+    }
+  });
+}
+
+async function loadCharacterDetails(charId, data, item) {
   const container = document.getElementById("details-tab");
   if (!container) return;
 
@@ -29,11 +194,19 @@ export async function loadCharacterDetails(charId, data, item) {
   const showToPlayers =
     item.metadata?.[`${ID}/metadata`]?.showToPlayers ?? false;
   const shouldShow = isGM || showToPlayers;
+  const existingDiv = document.getElementById(charId); // <-- this was missing!
 
+  // If the card exists but should no longer be shown, remove it
   if (!shouldShow) {
-    removeCharacterCard(charId);
+    if (existingDiv) {
+      existingDiv.remove();
+      delete lastCharacterData[charId];
+    }
     return;
   }
+
+  // If player and checkbox not enabled, do not show
+  if (!isGM && !showToPlayers) return;
 
   let characterDiv = document.getElementById(charId);
   const lastData = lastCharacterData[charId];
@@ -66,6 +239,7 @@ export async function loadCharacterDetails(charId, data, item) {
       </div>
     `;
 
+    // GM-only checkbox for show/hide to players
     if (isGM) {
       const checkbox = document.createElement("label");
       checkbox.style.display = "block";
@@ -90,6 +264,15 @@ export async function loadCharacterDetails(charId, data, item) {
             i.metadata = newMetadata;
           }
         });
+
+        // ✅ Diagnostic check to confirm the update persisted
+        const updatedItems = await OBR.scene.items.getItems();
+        const updatedItem = updatedItems.find((i) => i.id === item.id);
+
+        // console.log(
+        //   "Updated item metadata:",
+        //   updatedItem.metadata?.[`${ID}/metadata`]
+        // );
       });
 
       checkbox.appendChild(input);
@@ -102,20 +285,80 @@ export async function loadCharacterDetails(charId, data, item) {
   if (!lastData || lastData.name !== data.name)
     charNameEl.textContent = data.name;
 
-  charNameEl.style.cursor = "pointer";
-  charNameEl.onclick = () => openStatBlock(charId, data.name);
+  charNameEl.style.cursor = "pointer"; // indicate clickable
+
+  charNameEl.onclick = async () => {
+    const modalId = `${ID}/modal/${charId}`;
+
+    // Get current player's ID
+    const playerId = await OBR.player.getId();
+
+    // Get current player's role ("GM" or "Player")
+    const role = await OBR.player.getRole();
+
+    // Get room metadata (includes your settings)
+    const metadata = await OBR.room.getMetadata();
+    const settings = metadata?.[`${ID}/settings`] ?? {};
+
+    // Determine stat block access setting ("gmOwner" or "all")
+    const accessSetting = settings.statBlockAccess ?? "gmOwner";
+
+    // Get the item representing this character to find its owner ID
+    const items = await OBR.scene.items.getItems();
+    const charItem = items.find((item) => {
+      // Assuming character_id stored in metadata matches charId
+      return item.metadata?.[`${ID}/metadata`]?.character_id === charId;
+    });
+
+    if (!charItem) {
+      console.warn("Character item not found.");
+      return;
+    }
+
+    const ownerId = charItem.createdUserId;
+
+    // Check if current player is GM
+    const isGM = role === "GM";
+
+    // Check if current player is the owner of this character
+    const isOwner = playerId === ownerId;
+
+    // Access logic:
+    // If setting is "all" => everyone can view
+    // If setting is "gmOwner" => only GM or owner can view
+    const allowed =
+      accessSetting === "all" ||
+      (accessSetting === "gmOwner" && (isGM || isOwner));
+
+    if (!allowed) {
+      console.warn("Stat block access denied.");
+      return;
+    }
+
+    // If allowed, open the stat block popup
+    OBR.popover.open({
+      id: modalId,
+      url: `/charStats.html?charId=${charId}&name=${encodeURIComponent(
+        data.name
+      )}&modalId=${encodeURIComponent(modalId)}`,
+      width: 450,
+      height: 900,
+      marginThreshold: 25,
+      anchorOrigin: { horizontal: "RIGHT", vertical: "TOP" },
+      transformOrigin: { horizontal: "RIGHT", vertical: "TOP" },
+      anchorReference: "ELEMENT",
+    });
+  };
 
   if (!lastData || lastData.class !== data.class)
     characterDiv.querySelector(".char-class").innerHTML = `${data.class}`;
 
   if (!lastData || lastData.inspiration !== data.inspiration) {
     const inspirationElement = characterDiv.querySelector(".char-inspiration");
-    inspirationElement.innerHTML = "<strong>Inspiration:</strong>&nbsp;&nbsp;";
+    inspirationElement.innerHTML = " <strong>Inspiration:</strong>&nbsp;&nbsp;";
     const star = document.createElement("span");
-    star.classList.add(
-      "inspiration-star",
-      data.inspiration ? "filled" : "outlined"
-    );
+    star.classList.add("inspiration-star");
+    star.classList.add(data.inspiration ? "filled" : "outlined");
     star.textContent = "★";
     inspirationElement.appendChild(star);
   }
@@ -127,37 +370,38 @@ export async function loadCharacterDetails(charId, data, item) {
 
   const charImg = characterDiv.querySelector(".char-img");
   const charLink = characterDiv.querySelector(".char-link");
-
   if (!lastData || lastData.image_url !== data.image_url) {
     if (data.image_url) {
       charImg.src = data.image_url;
       charImg.alt = `${data.name}'s portrait`;
     } else {
+      // No image: use transparent pixel and show "No Image" overlay
       charImg.src =
-        "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+        "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="; // 1x1 transparent gif
       charImg.alt = "No image available";
-
+      // Add "No Image" text over it
       const noImageOverlay = document.createElement("div");
       noImageOverlay.textContent = "No Image";
+      noImageOverlay.style.position = "absolute";
+      noImageOverlay.style.top = "50%";
+      noImageOverlay.style.left = "50%";
+      noImageOverlay.style.transform = "translate(-50%, -50%)";
+      noImageOverlay.style.color = "#999";
+      noImageOverlay.style.fontWeight = "bold";
+      noImageOverlay.style.pointerEvents = "none"; // keep it clickable underneath
       noImageOverlay.classList.add("no-image-overlay");
-      Object.assign(noImageOverlay.style, {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        color: "#999",
-        fontWeight: "bold",
-        pointerEvents: "none",
-      });
 
       const wrapper = charImg.parentElement;
       wrapper.style.position = "relative";
-      wrapper.querySelector(".no-image-overlay")?.remove();
+      // Remove any existing overlay first
+      const existingOverlay = wrapper.querySelector(".no-image-overlay");
+      if (existingOverlay) existingOverlay.remove();
       wrapper.appendChild(noImageOverlay);
     }
   }
 
   charImg.style.cursor = "pointer";
+
   charLink.onclick = (event) => {
     event.preventDefault();
     const url = `https://www.dndbeyond.com/characters/${charId}`;
@@ -186,6 +430,7 @@ export async function loadCharacterDetails(charId, data, item) {
     smoothTransitionHealthBar(healthBarFill, targetPercentage);
   }
 
+  lastCharacterData[charId] = { ...data };
   lastCharacterData[charId] = data;
 }
 
@@ -201,38 +446,4 @@ function smoothTransitionHealthBar(healthBarFill, targetPercentage) {
       healthBarFill.style.width = `${currentWidth}%`;
     }
   }, 100);
-}
-
-async function openStatBlock(charId, name) {
-  const modalId = `${ID}/modal/${charId}`;
-  const playerId = await OBR.player.getId();
-  const role = await OBR.player.getRole();
-  const metadata = await OBR.room.getMetadata();
-  const accessSetting =
-    metadata?.[`${ID}/settings`]?.statBlockAccess ?? "gmOwner";
-
-  const items = await OBR.scene.items.getItems();
-  const charItem = items.find(
-    (item) => item.metadata?.[`${ID}/metadata`]?.character_id === charId
-  );
-  if (!charItem) return;
-
-  const ownerId = charItem.createdUserId;
-  const allowed =
-    accessSetting === "all" ||
-    (accessSetting === "gmOwner" && (role === "GM" || playerId === ownerId));
-  if (!allowed) return;
-
-  OBR.popover.open({
-    id: modalId,
-    url: `/charStats.html?charId=${charId}&name=${encodeURIComponent(
-      name
-    )}&modalId=${encodeURIComponent(modalId)}`,
-    width: 450,
-    height: 900,
-    marginThreshold: 25,
-    anchorOrigin: { horizontal: "RIGHT", vertical: "TOP" },
-    transformOrigin: { horizontal: "RIGHT", vertical: "TOP" },
-    anchorReference: "ELEMENT",
-  });
 }
