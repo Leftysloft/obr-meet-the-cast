@@ -29,5 +29,5 @@
     },
     "allowJs": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "assets"]
 }

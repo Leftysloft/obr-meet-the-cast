@@ -1,6 +1,7 @@
 // settings.js
 import OBR from "@owlbear-rodeo/sdk";
 import { ID } from "../constants.js";
+import { showDiceOverlay } from "../diceOverlay.js";
 
 const SETTINGS_KEY = `${ID}/settings`;
 
@@ -48,6 +49,23 @@ export function setupSettings() {
       { value: "all", label: "All" },
     ],
   };
+
+  let overlayOpen = false;
+
+  const diceTrayButton = document.getElementById("diceTrayButton");
+  if (diceTrayButton) {
+    diceTrayButton.addEventListener("click", () => {
+      console.log("Dice tray button clicked!");
+      if (!overlayOpen) {
+        showDiceOverlay(() => (overlayOpen = false)); // Pass a close callback
+        overlayOpen = true;
+      } else {
+        const overlay = document.getElementById("dice-overlay");
+        if (overlay) overlay.remove();
+        overlayOpen = false;
+      }
+    });
+  }
 
   OBR.player.getRole().then(async (role) => {
     const isGM = role === "GM";

@@ -1,0 +1,16 @@
+#dice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+#dice-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}

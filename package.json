@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@owlbear-rodeo/sdk": "^2.4.0",
+    "cannon-es": "^0.20.0",
     "cors": "^2.8.5",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "three": "^0.177.0"
   }
 }

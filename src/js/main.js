@@ -5,6 +5,10 @@ import { setupContextMenu } from "./contextMenu.js";
 import { setupSettings } from "./settings/settings.js";
 import { ID } from "./constants.js";
 import { fetchCharacterData } from "./characterData.js";
+// import { showDiceOverlay } from "./diceOverlay.js";
+
+// import { launchDiceOverlay } from "./diceRenderer-old.js";
+
 // import { setupLightSheetList } from "./lightSheetList.js";
 
 let pollingIntervals = {};
