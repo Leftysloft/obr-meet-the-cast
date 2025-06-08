@@ -15,6 +15,7 @@
         <button class="tab-button active" data-tab="tab1">Stats</button>
         <button class="tab-button" data-tab="tab2">Skills</button>
         <button class="tab-button" data-tab="tab3">Spells</button>
+        <button class="tab-button" data-tab="dice-tab">Dice</button>
         <button id="closeBtn">Close</button>
       </div>
 
@@ -85,12 +86,21 @@
           <p>Loading spells...</p>
         </div>
       </div>
+
+      <!-- Dice Roller -->
+      <div id="dice-tab" class="tab-content">
+        <div id="diceTray" class="dice-tray-container">
+          <p>Preparing dice tray...</p>
+          <button id="diceTrayButton" type="button">🎲 Open Dice Tray</button>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="src/js/charStats.js"></script>
     <script type="module">
       import { renderSkills } from "./src/js/charSkills.js";
-      import { renderSpells } from "./src/js/charSpells.js"; // 👈 New import
+      import { renderSpells } from "./src/js/charSpells.js";
+      import { setupDiceTray } from "./src/js/diceTray.js";
 
       const params = new URLSearchParams(window.location.search);
       const characterId = params.get("charId");
