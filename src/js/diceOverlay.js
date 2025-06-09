@@ -29,10 +29,10 @@ export async function showDiceOverlay() {
   overlay.id = "dice-overlay";
   Object.assign(overlay.style, {
     position: "fixed",
-    top: "450px",
+    bottom: "10px",
     right: "20px",
-    width: "150px",
-    height: "300px",
+    width: "400px",
+    height: "600px",
     pointerEvents: "auto",
     zIndex: 10000,
     border: "1px dashed red",
@@ -43,8 +43,8 @@ export async function showDiceOverlay() {
 
   const canvas = document.createElement("canvas");
   canvas.id = "dice-canvas";
-  canvas.width = 150;
-  canvas.height = 250;
+  canvas.width = 400;
+  canvas.height = 600;
   overlay.appendChild(canvas);
 
   const rollButton = document.createElement("button");
@@ -57,7 +57,7 @@ export async function showDiceOverlay() {
   document.body.appendChild(overlay);
 
   renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-  renderer.setSize(150, 250);
+  renderer.setSize(400, 600);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setClearColor(0x000000, 0);
 
@@ -185,52 +185,6 @@ function setupPhysics() {
     world.addBody(body);
   }
 }
-
-// Predefined flat rotations for snapping
-const baseFlatRotations = [
-  new CANNON.Quaternion().setFromEuler(0, 0, 0),
-  new CANNON.Quaternion().setFromEuler(Math.PI / 2, 0, 0),
-  new CANNON.Quaternion().setFromEuler(-Math.PI / 2, 0, 0),
-  new CANNON.Quaternion().setFromEuler(0, Math.PI / 2, 0),
-  new CANNON.Quaternion().setFromEuler(0, -Math.PI / 2, 0),
-  new CANNON.Quaternion().setFromEuler(Math.PI, 0, 0),
-];
-
-// Flip quaternion around Y axis by 180 degrees
-// const flipY = new CANNON.Quaternion().setFromEuler(0, Math.PI, 0);
-
-// Generate all rotations including flipped variants
-// const flatRotations = [];
-// for (const rot of baseFlatRotations) {
-//   flatRotations.push(rot);
-//   flatRotations.push(rot.mult(flipY));
-// }
-
-// Helper function to compute angle between two CANNON.Quaternions
-function quaternionAngle(q1, q2) {
-  let dot = Math.abs(q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w);
-  dot = Math.min(Math.max(dot, -1), 1);
-  return 2 * Math.acos(dot);
-}
-
-// // Snap die rotation to nearest flat rotation when stopped
-// function snapDieRotation(body) {
-//   let closest = flatRotations[0];
-//   let minAngle = Infinity;
-//   for (const quat of flatRotations) {
-//     const angle = quaternionAngle(quat, body.quaternion);
-//     if (angle < minAngle) {
-//       minAngle = angle;
-//       closest = quat;
-//     }
-//   }
-//   // Debug log to check which quaternion it snaps to:
-//   // console.log("Snapping to quaternion:", closest);
-
-//   body.quaternion.copy(closest);
-//   body.angularVelocity.set(0, 0, 0);
-//   body.velocity.set(0, 0, 0);
-// }
 
 function animate() {
   animationFrame = requestAnimationFrame(animate);

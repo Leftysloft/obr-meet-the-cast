@@ -87,9 +87,9 @@
         </div>
       </div>
 
-      <!-- Dice Roller -->
-      <div id="dice-tab" class="tab-content">
-        <div id="diceTray" class="dice-tray-container">
+      <!-- Dice Roller Tab -->
+      <div id="dice-tab" class="tab-content dice-overlay">
+        <div id="diceTray" class="dice-canvas">
           <p>Preparing dice tray...</p>
           <button id="diceTrayButton" type="button">🎲 Open Dice Tray</button>
         </div>
@@ -125,7 +125,7 @@
           if (tabId === "tab2" && characterId) {
             renderSkills(characterId);
           } else if (tabId === "tab3" && characterId) {
-            renderSpells(characterId); // 👈 Render spells on tab open
+            renderSpells(characterId);
           }
         });
       });
