@@ -50,23 +50,6 @@ export function setupSettings() {
     ],
   };
 
-  // let overlayOpen = false;
-
-  // const diceTrayButton = document.getElementById("diceTrayButton");
-  // if (diceTrayButton) {
-  //   diceTrayButton.addEventListener("click", () => {
-  //     console.log("Dice tray button clicked!");
-  //     if (!overlayOpen) {
-  //       showDiceOverlay(() => (overlayOpen = false)); // Pass a close callback
-  //       overlayOpen = true;
-  //     } else {
-  //       const overlay = document.getElementById("dice-overlay");
-  //       if (overlay) overlay.remove();
-  //       overlayOpen = false;
-  //     }
-  //   });
-  // }
-
   OBR.player.getRole().then(async (role) => {
     const isGM = role === "GM";
     const metadata = isGM ? await OBR.room.getMetadata() : {};

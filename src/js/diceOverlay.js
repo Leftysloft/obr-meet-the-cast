@@ -47,14 +47,24 @@ export async function showDiceOverlay() {
   canvas.height = 600;
   overlay.appendChild(canvas);
 
-  const rollButton = document.createElement("button");
-  rollButton.textContent = "Roll Dice";
-  rollButton.style.marginTop = "5px";
-  rollButton.style.width = "100%";
-  rollButton.addEventListener("click", rollDie);
-  overlay.appendChild(rollButton);
-
   document.body.appendChild(overlay);
+
+  // Create roll button outside the overlay
+  const rollButton = document.createElement("button");
+  rollButton.id = "roll-dice-button"; // ✅ important for cleanup
+  rollButton.textContent = "Roll Dice";
+  rollButton.addEventListener("click", rollDie);
+  Object.assign(rollButton.style, {
+    position: "fixed",
+    top: "200px",
+    right: "30px",
+    zIndex: "10001",
+    padding: "10px 20px",
+    fontSize: "16px",
+    cursor: "pointer",
+  });
+  document.body.appendChild(rollButton);
+  console.log("[Overlay] Roll Dice button created and added to DOM.");
 
   renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
   renderer.setSize(400, 600);
@@ -250,9 +260,20 @@ function rollDie() {
 function cleanup() {
   console.log("[Overlay] Cleaning up...");
   cancelAnimationFrame(animationFrame);
+
   if (overlay && document.body.contains(overlay)) {
     document.body.removeChild(overlay);
   }
+
+  // ✅ REMOVE ROLL DICE BUTTON
+  const rollButton = document.getElementById("roll-dice-button");
+  if (rollButton && document.body.contains(rollButton)) {
+    console.log("[Cleanup] Removing Roll Dice button.");
+    document.body.removeChild(rollButton);
+  } else {
+    console.warn("[Cleanup] Roll Dice button not found.");
+  }
+
   animationFrame = null;
   lastTime = null;
   die = null;

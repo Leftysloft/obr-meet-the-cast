@@ -16,6 +16,10 @@ export function setupDiceTray(buttonId = "diceTrayButton") {
       } else {
         const overlay = document.getElementById("dice-overlay");
         if (overlay) overlay.remove();
+
+        const rollButton = document.getElementById("roll-dice-button");
+        if (rollButton) rollButton.remove();
+
         overlayOpen = false;
       }
     });
