@@ -461,3 +461,35 @@ hr {
   height: 100%;
   display: block;
 }
+
+.dice-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem; /* vertical and horizontal spacing */
+  justify-content: flex-start; /* align left */
+  max-width: 280px; /* or whatever fits your layout */
+}
+
+.dice-buttons button {
+  flex: 1 1 40px; /* grow and shrink, base width 40px */
+  min-width: 40px; /* consistent min width */
+  max-width: 50px; /* max width */
+  height: 40px; /* consistent height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem; /* space between text and image if you add one */
+  padding: 0.25rem 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  border: none;
+  background: #eee;
+  color: #000;
+}
+
+.dice-buttons button img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}

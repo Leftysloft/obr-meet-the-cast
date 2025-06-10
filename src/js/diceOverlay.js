@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
 import { createDie } from "./diceFactory.js";
+import { showDiceControls, cleanupDiceControls } from "./diceControls.js";
 
 let animationFrame;
 let lastTime;
@@ -65,6 +66,54 @@ export async function showDiceOverlay() {
   });
   document.body.appendChild(rollButton);
   console.log("[Overlay] Roll Dice button created and added to DOM.");
+  // Create container for die buttons
+  const container = document.createElement("div");
+  container.id = "dice-buttons-container";
+  Object.assign(container.style, {
+    position: "fixed",
+    bottom: "20px", // Or adjust to fit your UI
+    right: "30px",
+    width: "280px", // Adjust width for wrapping nicely
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px 12px",
+    zIndex: "10001",
+  });
+  document.body.appendChild(container);
+
+  // Create die buttons inside container
+  const dieTypes = ["d4", "d6", "d8", "d10", "d12", "d20", "d100"];
+  dieTypes.forEach((type) => {
+    const button = document.createElement("button");
+    button.textContent = `Roll ${type}`;
+    button.style.flex = "1 1 40px"; // flexible width, min 40px per button
+    button.style.height = "40px";
+    button.style.padding = "6px 10px";
+    button.style.fontSize = "14px";
+    button.style.cursor = "pointer";
+    button.id = `roll-${type}-button`;
+
+    button.addEventListener("click", () => rollSingleDie(type));
+    container.appendChild(button);
+  });
+
+  // // 🎲 Create individual die buttons
+  // const dieTypes = ["d4", "d6", "d8", "d10", "d12", "d20", "d100"];
+  // dieTypes.forEach((type, index) => {
+  //   const button = document.createElement("button");
+  //   button.textContent = `Roll ${type}`;
+  //   button.style.position = "fixed";
+  //   button.style.top = `${260 + index * 40}px`;
+  //   button.style.right = "30px";
+  //   button.style.zIndex = "10001";
+  //   button.style.padding = "8px 16px";
+  //   button.style.fontSize = "14px";
+  //   button.style.cursor = "pointer";
+  //   button.id = `roll-${type}-button`;
+
+  //   button.addEventListener("click", () => rollSingleDie(type));
+  //   document.body.appendChild(button);
+  // });
 
   renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
   renderer.setSize(400, 600);
@@ -257,6 +306,68 @@ function rollDie() {
   dieBody.quaternion.set(0, 0, 0, 1);
 }
 
+async function rollSingleDie(type) {
+  // Remove old die from scene and world
+  if (die) scene.remove(die);
+  if (dieBody) world.removeBody(dieBody);
+
+  try {
+    die = await createDie(type);
+    die.traverse?.((child) => {
+      if (child.isMesh) {
+        child.scale.set(0.5, 0.5, 0.5);
+        child.material.transparent = false;
+        child.material.opacity = 1.0;
+      }
+    });
+    scene.add(die);
+
+    // Create physics body — adjust shape if needed for die type
+    const size = 0.25;
+    const dieShape = new CANNON.Box(new CANNON.Vec3(size, size, size));
+    const boxWidth = 2.4;
+    const boxHeight = 3.8;
+    const depth = 6.0;
+
+    dieBody = new CANNON.Body({
+      mass: 1,
+      shape: dieShape,
+      position: new CANNON.Vec3(
+        (Math.random() - 0.5) * boxWidth,
+        (Math.random() - 0.5) * boxHeight,
+        -depth / 4
+      ),
+      material:
+        world.materials?.find((m) => m.name === "dieMaterial") ||
+        new CANNON.Material("dieMaterial"),
+    });
+
+    dieBody.linearDamping = 0.4;
+    dieBody.angularDamping = 0.4;
+    dieBody.velocity.set(0, 0, 0);
+    dieBody.angularVelocity.set(0, 0, 0);
+    dieBody.quaternion.set(0, 0, 0, 1);
+
+    world.addBody(dieBody);
+
+    settledTime = 0;
+    dieBody.wakeUp();
+
+    dieBody.velocity.set(
+      (Math.random() - 0.5) * 20,
+      (Math.random() - 0.5) * 20,
+      6 + Math.random() * 20
+    );
+    dieBody.angularVelocity.set(
+      (Math.random() - 0.5) * 30,
+      (Math.random() - 0.5) * 30,
+      (Math.random() - 0.5) * 30
+    );
+  } catch (e) {
+    console.error(`Failed to create and roll ${type}:`, e);
+  }
+}
+
 function cleanup() {
   console.log("[Overlay] Cleaning up...");
   cancelAnimationFrame(animationFrame);
@@ -283,4 +394,17 @@ function cleanup() {
   camera = null;
   world = null;
   settledTime = 0;
+}
+
+// const dieTypes = ["d4", "d6", "d8", "d10", "d12", "d20", "d100"];
+// dieTypes.forEach((type) => {
+//   const button = document.getElementById(`roll-${type}-button`);
+//   if (button && document.body.contains(button)) {
+//     document.body.removeChild(button);
+//   }
+// });
+
+const container = document.getElementById("dice-buttons-container");
+if (container && document.body.contains(container)) {
+  document.body.removeChild(container);
 }
