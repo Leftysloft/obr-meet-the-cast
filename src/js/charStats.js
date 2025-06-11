@@ -7,7 +7,7 @@ import {
   renderSaveNotes,
 } from "./renderStats.js";
 // import { showDiceOverlay } from "./diceOverlay.js";
-import { setupDiceTray } from "./diceTray.js";
+import { openDiceOverlay, closeDiceOverlay } from "./diceTray.js";
 
 function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
@@ -43,7 +43,6 @@ OBR.onReady(async () => {
     renderAbilities(data.stats, charName);
     renderSavingThrows(data.stats, charName);
     renderSaveNotes(data.stats);
-    setupDiceTray();
 
     // Populate passive senses
     const sensesContainer = document.querySelector(".senses");

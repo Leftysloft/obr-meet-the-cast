@@ -91,7 +91,6 @@
       <div id="dice-tab" class="tab-content dice-overlay">
         <div id="diceTray" class="dice-canvas">
           <p>Preparing dice tray...</p>
-          <button id="diceTrayButton" type="button">🎲 Open Dice Tray</button>
         </div>
       </div>
     </div>
@@ -100,7 +99,7 @@
     <script type="module">
       import { renderSkills } from "./src/js/charSkills.js";
       import { renderSpells } from "./src/js/charSpells.js";
-      import { setupDiceTray } from "./src/js/diceTray.js";
+      import { openDiceOverlay, closeDiceOverlay } from "./src/js/diceTray.js";
 
       const params = new URLSearchParams(window.location.search);
       const characterId = params.get("charId");
@@ -116,6 +115,14 @@
         btn.addEventListener("click", () => {
           const tabId = btn.getAttribute("data-tab");
 
+          // Close dice overlay if we're leaving the dice tab
+          const diceTabWasActive = document
+            .getElementById("dice-tab")
+            .classList.contains("active");
+          if (diceTabWasActive && tabId !== "dice-tab") {
+            closeDiceOverlay();
+          }
+
           tabButtons.forEach((b) => b.classList.remove("active"));
           tabContents.forEach((c) => c.classList.remove("active"));
 
@@ -126,6 +133,8 @@
             renderSkills(characterId);
           } else if (tabId === "tab3" && characterId) {
             renderSpells(characterId);
+          } else if (tabId === "dice-tab") {
+            openDiceOverlay(); // 👈 Automatically open the dice tray
           }
         });
       });

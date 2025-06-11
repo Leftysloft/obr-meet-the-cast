@@ -79,7 +79,7 @@ export async function showDiceOverlay() {
     gap: "8px 12px",
     zIndex: "10001",
   });
-  document.body.appendChild(container);
+  overlay.appendChild(container);
 
   // Create die buttons inside container
   const dieTypes = ["d4", "d6", "d8", "d10", "d12", "d20", "d100"];
