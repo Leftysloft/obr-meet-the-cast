@@ -424,11 +424,15 @@ async function loadCharacterDetails(charId, data, item) {
   if (
     !lastData ||
     lastData.hp.current !== data.hp.current ||
-    lastData.hp.max !== data.hp.max
+    lastData.hp.max !== data.hp.max ||
+    lastData.hp.temp !== data.hp.temp
   ) {
+    const tempHpDisplay =
+      data.hp.temp > 0 ? ` <strong>Temp</strong>:${data.hp.temp}` : "";
     characterDiv.querySelector(
       ".char-hp"
-    ).innerHTML = `<strong>HP:</strong> ${data.hp.current} / ${data.hp.max}`;
+    ).innerHTML = `<strong>HP:</strong>${data.hp.current}/${data.hp.max}${tempHpDisplay}`;
+
     const healthBarFill = characterDiv.querySelector(".healthbar-fill");
     const targetPercentage = (data.hp.current / data.hp.max) * 100;
     smoothTransitionHealthBar(healthBarFill, targetPercentage);
