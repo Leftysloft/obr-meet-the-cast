@@ -428,7 +428,7 @@ async function loadCharacterDetails(charId, data, item) {
     lastData.hp.temp !== data.hp.temp
   ) {
     const tempHpDisplay =
-      data.hp.temp > 0 ? ` <strong>Temp</strong>:${data.hp.temp}` : "";
+      data.hp.temp > 0 ? ` <strong>Tmp</strong>:${data.hp.temp}` : "";
     characterDiv.querySelector(
       ".char-hp"
     ).innerHTML = `<strong>HP:</strong>${data.hp.current}/${data.hp.max}${tempHpDisplay}`;
